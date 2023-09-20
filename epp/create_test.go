@@ -49,7 +49,7 @@ func TestGetEPPHostCreate(t *testing.T) {
 	})
 
 	Convey("Creating a host create object with the same parameters as the default host create (and an additional v6 address) in the Verisign testing tool", t, func() {
-		verisignEPP := GetEPPHostCreate("NS1.EXAMPLE.COM", []string{"192.0.2.2"}, []string{"::1"}, "ABC-12345-XYZ")
+		verisignEPP := GetEPPHostCreate("NS1.EXAMPLE.COM", []string{"192.0.2.2"}, []string{"2001:db8::1eab:b52d:27e4:5da6"}, "ABC-12345-XYZ")
 		Convey("The output should match the output from the testing tool", func() {
 			eppStr, eppErr := verisignEPP.ToString()
 			So(eppStr, ShouldEqual, verisignHostCreateWithV6)
@@ -238,7 +238,7 @@ var verisignHostCreateWithV6 = `<epp xmlns:xsi="http://www.w3.org/2001/XMLSchema
       <host:create xmlns:host="urn:ietf:params:xml:ns:host-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:host-1.0 host-1.0.xsd">
         <host:name>NS1.EXAMPLE.COM</host:name>
         <host:addr ip="v4">192.0.2.2</host:addr>
-        <host:addr ip="v6">::1</host:addr>
+        <host:addr ip="v6">2001:db8::1eab:b52d:27e4:5da6</host:addr>
       </host:create>
     </create>
     <extension>

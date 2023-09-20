@@ -14,8 +14,8 @@ func TestGetConnectionString(t *testing.T) {
 	})
 
 	Convey("Given a config with only the host set, GetConnectionString should return host:1700", t, func() {
-		conf := Config{Host: "foo.com"}
-		So(conf.GetConnectionString(), ShouldEqual, "foo.com:1700")
+		conf := Config{Host: "example.com"}
+		So(conf.GetConnectionString(), ShouldEqual, "example.com:1700")
 	})
 
 	Convey("Given a config with only the port set, GetConnectionString should return 127.0.0.1:port", t, func() {
@@ -24,7 +24,7 @@ func TestGetConnectionString(t *testing.T) {
 	})
 
 	Convey("Given a config with both host and port set, GetConnectionString should return host:port", t, func() {
-		conf := Config{Host: "foo.com", Port: 1800}
-		So(conf.GetConnectionString(), ShouldEqual, "foo.com:1800")
+		conf := Config{Host: "example.com", Port: 1800}
+		So(conf.GetConnectionString(), ShouldEqual, "example.com:1800")
 	})
 }

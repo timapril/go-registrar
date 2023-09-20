@@ -40,11 +40,11 @@ func TestGetEPPHostUpdate(t *testing.T) {
 	t.Parallel()
 	Convey("Creating a host update object with some values in each of the add, remove and change options", t, func() {
 		addAddresses := []HostAddress{}
-		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv4, Address: "1.2.3.4"})
-		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv6, Address: "::1"})
+		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv4, Address: "192.0.2.223"})
+		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv6, Address: "2001:db8::ff24:2c74:42c5:5dfc"})
 		remAddresses := []HostAddress{}
-		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv6, Address: "::2"})
-		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv4, Address: "5.6.7.8"})
+		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv6, Address: "2001:db8::1eab:b52d:27e4:5da6"})
+		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv4, Address: "203.0.113.56"})
 		add := GetEPPHostUpdateAddRemove(addAddresses, []string{"clientUpdateProhibited"})
 		rem := GetEPPHostUpdateAddRemove(remAddresses, []string{"clientDeleteProhibited"})
 		chg := GetEPPHostUpdateChange("ns2.example.com")
@@ -59,11 +59,11 @@ func TestGetEPPHostUpdate(t *testing.T) {
 
 	Convey("Creating a host update object with some values in each of the add, remove and change options (dot net version)", t, func() {
 		addAddresses := []HostAddress{}
-		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv4, Address: "1.2.3.4"})
-		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv6, Address: "::1"})
+		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv4, Address: "192.0.2.223"})
+		addAddresses = append(addAddresses, HostAddress{IPVersion: IPv6, Address: "2001:db8::ff24:2c74:42c5:5dfc"})
 		remAddresses := []HostAddress{}
-		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv6, Address: "::2"})
-		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv4, Address: "5.6.7.8"})
+		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv6, Address: "2001:db8::1eab:b52d:27e4:5da6"})
+		remAddresses = append(remAddresses, HostAddress{IPVersion: IPv4, Address: "203.0.113.56"})
 		add := GetEPPHostUpdateAddRemove(addAddresses, []string{"clientUpdateProhibited"})
 		rem := GetEPPHostUpdateAddRemove(remAddresses, []string{"clientDeleteProhibited"})
 		chg := GetEPPHostUpdateChange("ns2.example.net")
@@ -281,13 +281,13 @@ var verisignHostUpdate = `<epp xmlns:xsi="http://www.w3.org/2001/XMLSchema-insta
       <host:update xmlns:host="urn:ietf:params:xml:ns:host-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:host-1.0 host-1.0.xsd">
         <host:name>NS1.EXAMPLE.COM</host:name>
         <host:add>
-          <host:addr ip="v4">1.2.3.4</host:addr>
-          <host:addr ip="v6">::1</host:addr>
+          <host:addr ip="v4">192.0.2.223</host:addr>
+          <host:addr ip="v6">2001:db8::ff24:2c74:42c5:5dfc</host:addr>
           <host:status s="clientUpdateProhibited"></host:status>
         </host:add>
         <host:rem>
-          <host:addr ip="v6">::2</host:addr>
-          <host:addr ip="v4">5.6.7.8</host:addr>
+          <host:addr ip="v6">2001:db8::1eab:b52d:27e4:5da6</host:addr>
+          <host:addr ip="v4">203.0.113.56</host:addr>
           <host:status s="clientDeleteProhibited"></host:status>
         </host:rem>
         <host:chg>
@@ -311,13 +311,13 @@ var verisignHostUpdateDotNet = `<epp xmlns:xsi="http://www.w3.org/2001/XMLSchema
       <host:update xmlns:host="urn:ietf:params:xml:ns:host-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:host-1.0 host-1.0.xsd">
         <host:name>NS1.EXAMPLE.NET</host:name>
         <host:add>
-          <host:addr ip="v4">1.2.3.4</host:addr>
-          <host:addr ip="v6">::1</host:addr>
+          <host:addr ip="v4">192.0.2.223</host:addr>
+          <host:addr ip="v6">2001:db8::ff24:2c74:42c5:5dfc</host:addr>
           <host:status s="clientUpdateProhibited"></host:status>
         </host:add>
         <host:rem>
-          <host:addr ip="v6">::2</host:addr>
-          <host:addr ip="v4">5.6.7.8</host:addr>
+          <host:addr ip="v6">2001:db8::1eab:b52d:27e4:5da6</host:addr>
+          <host:addr ip="v4">203.0.113.56</host:addr>
           <host:status s="clientDeleteProhibited"></host:status>
         </host:rem>
         <host:chg>
