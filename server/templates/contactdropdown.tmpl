@@ -1,0 +1,24 @@
+{{define "contactdropdown"}}
+
+  {{if .IsNew}}
+    {{$cs := .Suggested}}
+    <select name='{{.FieldName}}' id='{{.FieldName}}'>
+      <option value="0"{{if eq $cs 0}} selected{{end}}>None</option>
+      {{range $id, $contact := .ValidContacts}}
+        <option value="{{$id}}"{{if eq $cs $id}} selected{{end}}>{{$contact}}</option>
+      {{end}}
+    </select>
+  {{else}}
+    {{$cs := .CurrentSelection.ID}}
+    {{if .Editable}}
+      <select name='{{.FieldName}}' id='{{.FieldName}}'>
+        <option value="0"{{if eq $cs 0}} selected{{end}}>None</option>
+        {{range $id, $contact := .ValidContacts}}
+          <option value="{{$id}}"{{if eq $cs $id}} selected{{end}}>{{$contact}}</option>
+        {{end}}
+      </select>
+    {{else}}
+      {{.CurrentSelection.DisplayName}}
+    {{end}}
+  {{end}}
+{{end}}

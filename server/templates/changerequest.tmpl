@@ -1,0 +1,57 @@
+{{define "changerequest"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Change Request</h1>
+      </div>
+
+      <div class="container">
+        <div class='current_state'><b>Current State</b></div></br>
+
+          <div class='form_name'>Object Type: </div>{{.CR.RegistrarObjectType}}<br/>
+          <div class='form_name'>Object ID: </div>{{.CR.RegistrarObjectID}}<br/>
+          <div class='form_name'>Object Link: </div><a href='/view/{{.CR.RegistrarObjectType}}/{{.CR.RegistrarObjectID}}'>Link</a><br/>
+          <div class='form_name'>Change Requests State:</div>{{.CR.State}}<br/>
+          <div class='form_name'>Diff:</div><a href='#' id='diffFieldAction' onclick="toggle_content('diffField');">Expand</a><div id='diffFieldContent' style='display:none'><pre>{{.CR.ChangeDiff}}</pre></div><br/>
+          <div class='form_name'>Full State</div><a href='#' id='fullStateFieldAction' onclick="toggle_content('fullStateField');">Expand</a><div id='fullStateFieldContent' style='display:none'><pre>{{.CR.ChangeJSON}}</pre></div><br/>
+          <br/>
+          <div class='form_name'>Created: </div>{{.CR.CreatedAt}} by {{.CR.CreatedBy}}<br/>
+          <div class='form_name'>Updated: </div>{{.CR.UpdatedAt}} by {{.CR.UpdatedBy}}<br/>
+        </p>
+      </div>
+      <hr/>
+      <div class='container'>
+        <h3>Approvals</h3><br>
+        {{$approvals  := .CR.Approvals}}
+        {{range $idx, $approval :=  $approvals}}
+          <div>
+            <div class='form_name'>Approval ID: </div>{{$approval.ID}}&nbsp;( <a href='/view/approval/{{$approval.ID}}'>Link</a> )<br/>
+            <div class='form_name'>Approval is Final Approval: </div>{{$approval.IsFinalApproval}}<br/>
+            <div class='form_name'>Approval State: </div>{{$approval.State}}<br/>
+            <div class='form_name'>Approver Set: </div>{{$approval.ApproverSetID}}<br/>
+            <div class='form_name'>Approver Set Title: </div>{{$approval.ApprovalApproverSet.GetCurrentValue "Title"}}<br>
+            <div class='form_name'>Approvers </div><div style='display:inline-block'>
+              {{$approvers := $approval.ApprovalApproverSet.CurrentRevision.Approvers}}
+              {{range $idx, $approver := $approvers}}
+                {{$approver.GetCurrentValue "EmailAddress"}}
+              {{end}}
+            </div><br/>
+            <br/>
+            <div class='form_name'>Created: </div>{{$approval.CreatedAt}} by {{$approval.CreatedBy}}<br/>
+            <div class='form_name'>Updated: </div>{{$approval.UpdatedAt}} by {{$approval.UpdatedBy}}<br/>
+          </div>
+          <hr align="left" style="width:600px;">
+        {{end}}
+      </div>
+    </div>
+  </body>
+</html>
+{{end}}

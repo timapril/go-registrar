@@ -1,0 +1,96 @@
+{{define "hostrevisionview"}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <form method='Post' action='/save/hostrevision'>
+        <input type='hidden' name='revision_host_id' id='revision_host_id' value='{{.ParentHost.ID}}'>
+    {{else}}
+      <form method='Post' action='/update/hostrevision'>
+        <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+    {{end}}
+
+    <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+  {{end}}
+
+  <div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+  <div class='form_name'>Parent ID: </div>{{.ParentHost.ID}}</br>
+
+  {{template "revisionstates" dict "Revision" .Revision "Parent" .ParentHost "IsEditable" .IsEditable "IsNew" .IsNew "IncludeExternal" false}}
+
+  <br/>
+  <div class='form_name'>Host Addresses:</div>
+  {{if .IsEditable}}
+    {{if .IsNew}}
+    <div class='hostlist' id='host_address_list'>
+      {{range $id, $host := .SuggestedHostAddresses}}
+        <div id="{{$host.FormDivName}}"><div class="form_name"></div><input type="hidden" id="host_address" name="host_address" value="{{$host.FormValue}}"><div class="title">{{$host.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_host_addres('{{$host.FormDivName}}', '{{$host.IPAddress}}', 'v{{$host.Protocol}}');">Remove</a></div>
+      {{end}}
+    </div>
+    {{else}}
+      <div class='hostlist' id='host_address_list'>
+      {{range $id, $host := .Revision.HostAddresses}}
+        <div id="{{$host.FormDivName}}"><div class="form_name"></div><input type="hidden" id="host_address" name="host_address" value="{{$host.FormValue}}"><div class="title">{{$host.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_host_addres('{{$host.FormDivName}}', '{{$host.IPAddress}}', 'v{{$host.Protocol}}');">Remove</a></div>
+      {{end}}
+      </div>
+    {{end}}
+    <br/>
+    <div class='form_name'>Address To Add:</div><input type=text name='to_add_address' id='to_add_address' oninput="host_entry_change_event();"><select name='to_add_address_proto' id='to_add_address_proto' oninput="host_entry_change_event();">
+          <option value='4'>v4</option>
+          <option value='6'>v6</option>
+        </select><input type='button' value='Add' id='push_host_address_button' onclick='push_host_address();'>
+        <br/>
+        <div class='form_name'></div><div class='display_message' id="host_add_message"></div><br/>
+
+  {{else}}
+    {{range $id, $host := .Revision.HostAddresses}}
+    <div id="current_{{$host.FormDivName}}">
+      <div class="form_name"></div>
+      <div class="title">{{$host.DisplayName}}</div>
+    </div>
+    {{end}}
+  {{end}}
+  <br/>
+  <br/>
+
+  {{if .IsNew}}
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .ParentHost.SuggestedRevisionBool "ClientDelete"}} checked {{end}}><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .ParentHost.SuggestedRevisionBool "ServerDelete"}} checked {{end}}><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .ParentHost.SuggestedRevisionBool "ClientUpdate"}} checked {{end}}><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .ParentHost.SuggestedRevisionBool "ServerUpdate"}} checked {{end}}><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .ParentHost.SuggestedRevisionBool "ClientTransfer"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .ParentHost.SuggestedRevisionBool "ServerTransfer"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+  {{else}}
+    {{if .IsEditable}}
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .Revision.ClientDeleteProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .Revision.ServerDeleteProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .Revision.ClientUpdateProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .Revision.ServerUpdateProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .Revision.ClientTransferProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .Revision.ServerTransferProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+    {{else}}
+      <div class='form_name'>Client Delete Prohibited:</div>{{if .Revision.ClientDeleteProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Delete Prohibited:</div>{{if .Revision.ServerDeleteProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Update Prohibited:</div>{{if .Revision.ClientUpdateProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Update Prohibited:</div>{{if .Revision.ServerUpdateProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Transfer Prohibited:</div>{{if .Revision.ClientTransferProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div>{{if .Revision.ServerTransferProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+    {{end}}
+  {{end}}
+
+  {{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentHost "SavedNotes" .Revision.SavedNotes}}
+
+  {{template "approversetview" .}}
+
+  {{template "importantdates" .}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <input type='submit' value='Submit Revision'>
+    {{else}}
+      <input type='submit' value='Submit Updated Revision'>
+    {{end}}
+  </form>
+  {{end}}
+{{end}}

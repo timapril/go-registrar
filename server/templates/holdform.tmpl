@@ -1,0 +1,23 @@
+{{define "holdform"}}
+  <h3>New Hold Status</h3>
+  {{if .Obj.HoldActive}}
+    <div class='form_name'>Current Hold Reason:</div>{{.Obj.HoldReason}}<br/>
+  {{end}}
+
+  <form method="POST" action="/hold/update/{{.Obj.GetType}}/{{.Obj.ID}}">
+    <input type='hidden' name='csrf_token' id='csrf_token' value='{{.CSRFToken}}'>
+    <input type="hidden" name="hold_status" id="hold_status" value="true">
+    <div class='form_name'>New Hold Reason</div><input type=text id='hold_reason' name='hold_reason' {{if .Obj.HoldActive}}value="{{.Obj.HoldReason}}"{{end}}></input><br/>
+    <div class='form_name'></div><input type=submit value="Update Hold" id="update_hold" name="update_hold">
+  </form>
+
+  {{if .Obj.HoldActive}}
+    <br/>
+    <form method="POST" action="/hold/update/{{.Obj.GetType}}/{{.Obj.ID}}">
+      <input type='hidden' name='csrf_token' id='csrf_token' value='{{.CSRFToken}}'>
+      <input type="hidden" name="hold_status" id="hold_status" value="false">
+      <div class='form_name'></div><input type=submit class="actionButton" value="Release Hold" id="release_hold" name="release_hold">
+    </form>
+  {{end}}
+<br/>
+{{end}}

@@ -1,0 +1,65 @@
+{{define "contacts"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Contacts</h1>
+      </div>
+      <p><a href="/new/contact">Add New Contact</a></p>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              Contact Name
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Contact Address
+            </td>
+            <td>
+              Phone Numbers
+            </td>
+            <td>
+              Email
+            </td>
+          </thead>
+          {{range $contact := .Contacts}}
+            <tr>
+              <td>
+                <a href='/view/contact/{{$contact.ID}}'>{{$contact.ID}}</a>
+              </td>
+              <td>
+                <pre>{{$contact.PreviewName}}</pre>
+              </td>
+              <td>
+                {{$contact.State}}
+              </td>
+              <td>
+                <pre>{{$contact.PreviewAddress}}</pre>
+              </td>
+              <td>
+                <pre>{{$contact.PreviewPhone}}</pre>
+              </td>
+              <td>
+                <pre>{{$contact.PreviewEmail}}</pre>
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+{{end}}

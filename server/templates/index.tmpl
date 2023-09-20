@@ -1,0 +1,61 @@
+{{define "indexPage"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Go-Registrar</h1>
+      </div>
+      <b>Domains Pending</b>
+      <table border='1px'>
+        <tr>
+          <thead>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Provisioning Status</td>
+            <td>Pending Check</td>
+            <td>Hold Status</td>
+          </thead>
+        </tr>
+        {{range $dom := .WorkDomains}}
+          <tr>
+            <td>{{$dom.ID}}</td>
+            <td>{{$dom.DomainName}}</td>
+            <td>{{$dom.EPPStatus}}</td>
+            <td>{{$dom.CheckRequired}}</td>
+            <td>{{$dom.HoldActive}}</td>
+          </tr>
+        {{end}}
+      </table>
+      <br>
+      <b>Hosts Pending</b>
+      <table border='1px'>
+        <tr>
+          <thead>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Provisioning Status</td>
+            <td>Pending Check</td>
+            <td>Hold Status</td>
+          </thead>
+        </tr>
+        {{range $hos := .WorkHosts}}
+          <tr>
+            <td>{{$hos.ID}}</td>
+            <td>{{$hos.HostName}}</td>
+            <td>{{$hos.EPPStatus}}</td>
+            <td>{{$hos.CheckRequired}}</td>
+            <td>{{$hos.HoldActive}}</td>
+          </tr>
+        {{end}}
+      </table>
+    </div>
+  </body>
+</html>
+{{end}}

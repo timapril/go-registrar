@@ -1,0 +1,58 @@
+{{define "apiuserrevisionview"}}
+
+{{if .IsEditable}}
+  <br/>
+  {{if .IsNew}}
+    <form method='Post' action='/save/apiuserrevision'>
+      <input type='hidden' name='revision_apiuser_id' id='revision_apiuser_id' value='{{.ParentAPIUser.ID}}'>
+  {{else}}
+  <form method='Post' action='/update/apiuserrevision'>
+    <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+  {{end}}
+    <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+{{end}}
+
+<div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+<div class='form_name'>Parent ID: </div>{{.ParentAPIUser.ID}}</br>
+
+{{template "revisionstates" dict "Revision" .Revision "Parent" .ParentAPIUser "IsEditable" .IsEditable "IsNew" .IsNew  "IncludeExternal" false}}
+
+<br/>
+
+<div class='form_name'>Name: </div>{{if .IsEditable}}<input type='text' name='revision_name' id='revision_name' value="{{if .IsNew}}{{.ParentAPIUser.SuggestedRevisionValue "Name"}}{{else}}{{.Revision.Name}}{{end}}">{{else}}{{.Revision.Name}}{{end}}<br/>
+<div class='form_name'>Description:</div>{{if .IsEditable}}<input type='text' name='revision_description' id='revision_description' value="{{if .IsNew}}{{.ParentAPIUser.SuggestedRevisionValue "Description"}}{{else}}{{.Revision.Description}}{{end}}">{{else}}{{.Revision.Description}}{{end}}<br/>
+<div class='form_name'>Serial:</div>{{if .IsNew}}No Cert Posted Yet{{else}}{{.Revision.Serial}}{{end}}<br/>
+<div class='form_name'>Certificate: </div>{{if .IsEditable}}<textarea type='text' name='revision_certificate' id='revision_certificate'>{{if .IsNew}}{{.ParentAPIUser.SuggestedRevisionValue "Certificate"}}{{else}}{{.Revision.Certificate}}{{end}}</textarea>{{else}}<code style='white-space: pre;word-break: normal;word-wrap: normal;'>{{.Revision.Certificate}}</code>{{end}}<br/>
+
+<br/>
+{{if .IsNew}}
+  <div class='form_name'>Is Admin:</div><input type='checkbox' name='revision_is_admin' id='revision_is_admin' {{if .ParentAPIUser.SuggestedRevisionBool "IsAdmin"}} checked {{end}}><br/>
+  <div class='form_name'>Is EPP Client:</div><input type='checkbox' name='revision_is_epp_client' id='revision_is_epp_client' {{if .ParentAPIUser.SuggestedRevisionBool "IsEPPClient"}} checked {{end}}><br/>
+{{else}}
+  {{if .IsEditable}}
+    <div class='form_name'>Is Admin:</div><input type='checkbox' name='revision_is_admin' id='revision_is_admin' {{if .Revision.IsAdmin}} checked {{end}}><br/>
+    <div class='form_name'>Is EPP Client:</div><input type='checkbox' name='revision_is_epp_client' id='revision_is_epp_client' {{if .Revision.IsEPPClient}} checked {{end}}><br/>
+  {{else}}
+    <div class='form_name'>Is Admin:</div>{{if .Revision.IsAdmin}} True {{else}} False {{end}}<br/>
+    <div class='form_name'>Is EPP Client:</div>{{if .Revision.IsEPPClient}} True {{else}} False {{end}}<br/>
+  {{end}}
+{{end}}
+
+{{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentAPIUser "SavedNotes" .Revision.SavedNotes}}
+
+{{template "approversetview" .}}
+
+{{template "importantdates" .}}
+
+{{if .IsEditable}}
+  <br/>
+  {{if .IsNew}}
+    <input type='submit' value='Submit Revision'>
+  {{else}}
+    <input type='submit' value='Submit Updated Revision'>
+  {{end}}
+</form>
+{{end}}
+
+
+{{end}}

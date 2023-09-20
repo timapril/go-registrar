@@ -1,0 +1,8 @@
+{{define "holdview"}}
+  <div class='form_name'>Hold Status:</div>{{if .HoldActive}}Active{{else}}Inactive{{end}}<br/>
+  {{if .HoldActive}}
+    <div class='form_name'>Hold User:</div>{{.HoldBy}}<br/>
+    <div class='form_name'>Hold Start Date:</div>{{.HoldAt}}<br/>
+    <div class='form_name'>Hold Reason:</div>{{.HoldReason}}<br/>
+  {{end}}
+{{end}}

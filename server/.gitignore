@@ -1,0 +1,6 @@
+pubkey.asc
+logfile
+server.cfg.*
+server.cfg
+server
+vendor/*

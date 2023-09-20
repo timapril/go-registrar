@@ -1,0 +1,13 @@
+digraph changeRequestState {
+  new -> cancelled [label="the change request\nhas been cancelled"]
+  new -> pendingapproval [label="approvals have been\ncreated and are pending approval"]
+  pendingapproval -> declined [label="an approval\nwas declined"]
+  pendingapproval -> cancelled [label="the change request\nhas been cancelled"]
+  pendingapproval -> pendingimplementation [label="all required approvals\nhave been gathered and\nimplementation steps exist"]
+  pendingapproval -> approved [label="all required approvals have\nbeen gatheredand no\nimplementation steps exist"]
+  pendingapproval -> pendingapproval [label="an approval submitted\nbut more are needed"]
+  pendingimplementation -> implementationinprogress [label="implementation has started\nbut not completed"]
+  implementationinprogress -> approved [label="implementation\nhas completed"]
+  implementationinprogress -> pendingimplementation [label="an implementation set has\ncompleted, more are required"]
+
+}

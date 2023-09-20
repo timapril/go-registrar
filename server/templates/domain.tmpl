@@ -1,0 +1,168 @@
+{{define "domain"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Domain</h1>
+      </div>
+      <div class="container">
+
+        <div class='edit_cell'>
+          <p>
+            {{if .Editable}}
+            {{if .IsNew}}
+              <form method='Post' action='/save/domain'>
+            {{else}}
+              <form method='Post' action='/update/domain'>
+                <input type=hidden name='id' id='id' value='{{.Dom.ID}}'>
+            {{end}}
+            <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+          {{else}}
+            <div class='current_state'><b>Current Registry State</b></div></br>
+          {{end}}
+            <div class='form_name'>Domain ID:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.ID}}{{end}}<br/>
+            <div class='form_name'>Domain State:</div>{{if .Editable}}
+            {{$ds := .Dom.State}}
+            <select name='domain_state' id='domain_state'>
+              <option value='new'{{if eq .Dom.State "new"}} selected{{end}}>new</option>
+              <option value='new-external'{{if eq .Dom.State "new-external"}} selected{{end}}>new-external</option>
+            </select>{{else}}{{.Dom.State}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Domain Name: </div>{{if .Editable}}<input type='text' name='domain_name' id='domain_name' value='{{.Dom.DomainName}}'> {{else}} {{.Dom.DomainName}} {{end}}<br/>
+            <div class='form_name'>Registry Domain ID:</div>{{.Dom.DomainROID}}<br/>
+            <div class='form_name'>Host Names: </div><pre>{{.Dom.DomainNSList}}</pre><br/>
+            <br/>
+            <div class='form_name'>Registrant Contact:</div>{{.Dom.DomainRegistrantROID}}<br>
+            <div class='form_name'>Admin Contact:</div>{{.Dom.DomainAdminContactROID}}<br/>
+            <div class='form_name'>Tech Contact:</div>{{.Dom.DomainTechContactROID}}<br/>
+            <div class='form_name'>Billing Contact:</div>{{.Dom.DomainBillingContactROID}}<br/>
+            <br/>
+            <div class='form_name'>Current Registrar Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.DomainStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Client Hold:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ClientHoldStatus}}{{end}}<br/>
+            <div class='form_name'>Server Hold:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ServerHoldStatus}}{{end}}<br/>
+            <div class='form_name'>Client Renew Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ClientRenewProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Renew Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ServerRenewProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ClientDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ServerDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ClientTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ServerTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ClientUpdateProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.ServerUpdateProhibitedStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Pending Create Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.PendingCreateStatus}}{{end}}<br/>
+            <div class='form_name'>Pending Delete Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.PendingDeleteStatus}}{{end}}<br/>
+            <div class='form_name'>Pending Renew Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.PendingRenewStatus}}{{end}}<br/>
+            <div class='form_name'>Pending Transfer Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.PendingTransferStatus}}{{end}}<br/>
+            <div class='form_name'>Pending Update Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.PendingUpdateStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>DNSSEC Entries:</div>
+            {{range $id, $dsEntry := .Dom.DSDataEntries}}
+            <div id="current_{{$dsEntry.FormDivName}}">
+              <div class="form_name"></div>
+              <div class="title">{{$dsEntry.DisplayName}}</div>
+            </div>
+            {{end}}
+            <br/>
+
+            <div class='form_name'>Creating Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.CreateClientID}}{{end}}<br/>
+            <div class='form_name'>Sponsoring Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.SponsoringClientID}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Domain Create Date:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.CreateDate}}{{end}}<br/>
+            <div class='form_name'>Domain Update Date:</div>{{if .IsNew}}Not Updated Yet{{else}}  {{.Dom.UpdateDate}}{{end}}<br/>
+            <div class='form_name'>Domain Transfer Date:</div>{{if .IsNew}}Not Transfered Yet{{else}}  {{.Dom.TransferDate}}{{end}}<br/>
+            <div class='form_name'>Domain Expire Date:</div>{{if .IsNew}}No Expire Date Yet{{else}}  {{.Dom.ExpireDate}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>EPP Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.EPPStatus}} ({{.Dom.EPPLastUpdate}}){{end}}<br/>
+            <div class='form_name'>DNS Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.DNSStatus}} ({{.Dom.DNSLastUpdate}}){{end}}<br/>
+            <br/>
+            <div class='form_name'>Pending Check:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.CheckRequired}}{{if .Dom.CheckRequired}}{{else}}  <a href="/check/domain/{{.Dom.ID}}">Toggle</a>{{end}}{{end}}<br/>
+            <div class='form_name'>Created:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.CreatedAt}} by {{.Dom.CreatedBy}}{{end}}<br/>
+            <div class='form_name'>Updated:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Dom.UpdatedAt}} by {{.Dom.UpdatedBy}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Update Hold Status:</div><a href='/hold/domain/{{.Dom.ID}}'>Hold Update Link</a><br/>
+            {{template "holdview" .Dom}}
+            <br/>
+            {{if .Editable}}
+              <input type='submit' name='Submit' value='Submit'/>
+            </form>
+            {{end}}
+          </p>
+        </div>
+        <div class='edit_cell'>
+          <p>
+            <div class='current_state'><b>WHOIS State</b></div><a href="/action/domain/{{.Dom.ID}}/updatewhois?csrf_token={{.GetCSRFToken}}">Update WHOIS</a><br>
+            <br><br><br>
+            <div class='form_name'>Registrar ID:</div>{{if not .IsNew}}{{.Dom.WHOISRegistrarID}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server:</div>{{if not .IsNew}}{{.Dom.WHOISServer}}{{end}}<br/>
+            <div class='form_name'>WHOIS Host Names:</div>{{if not .IsNew}}
+              <div class='whois_hostname_list' id='whois_hostname_list'>
+                {{range $id, $ns := .Dom.WHOISNameServers}}
+                  <div class="form_name"></div>{{$ns}}<br>
+                {{end}}
+              </div>
+            {{end}}<br/>
+            <br/>
+            <div class='form_name'>WHOIS Registrant Name:</div>{{if not .IsNew}}{{.Dom.WHOISRegistrantName}}{{end}}<br/>
+            <div class='form_name'>WHOIS Admin Name:</div>{{if not .IsNew}}{{.Dom.WHOISRegistrantName}}{{end}}<br/>
+            <div class='form_name'>WHOIS Tech Name:</div>{{if not .IsNew}}{{.Dom.WHOISTechName}}{{end}}<br/>
+            <div class='form_name'>WHOIS Billing Name:</div>{{if not .IsNew}}{{.Dom.WHOISBillingName}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>WHOIS Client Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ClientDeleteProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ServerDeleteProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Client Renew Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ClientRenewProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server Renew Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ServerRenewProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Client Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ClientTransferProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ServerTransferProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Client Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ClientUpdateProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ServerUpdateProhibited"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Client Hold:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ClientHold"}}{{end}}<br/>
+            <div class='form_name'>WHOIS Server Hold:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Dom.WHOISHasStatus "ServerHold"}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>WHOIS DNSSEC Sigend:</div>{{if .IsNew}}Not Created Yet{{else}}  {{if .Dom.WHOISDNSSSECSigned}}Signed{{else}}Unsigned{{end}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>WHOIS Create Date:</div>{{if not .IsNew}}{{.Dom.WHOISCreateDate}}{{end}}<br/>
+            <div class='form_name'>WHOIS Update Date:</div>{{if not .IsNew}}{{.Dom.WHOISUpdatedDate}}{{end}}<br/>
+            <div class='form_name'>WHOIS Expire Date:</div>{{if not .IsNew}}{{.Dom.WHOISExpireDate}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>WHOIS Last Updated At:</div>{{if not .IsNew}}{{.Dom.WHOISLastUpdatedAt}}{{end}}<br/>
+            <br/>
+          </p>
+        </div>
+      </div>
+      <hr/>
+      <div class='container'>
+        {{if .IsNew}}
+          <p>No revisions can be created until the approver has been created</p>
+        {{else}}
+        <div class='edit_cell'>
+          {{if .Dom.HasRevision}}
+            <p><b>Current Revision</b></p>
+            <br/>
+            {{template "domainrevisionview" .CurrentRevisionPage}}
+          {{else}}
+            <p>No Revisions yet</p>
+          {{end}}
+        </div>
+        <div class='edit_cell'>
+          {{if .Dom.HasPendingRevision}}
+            <p><b>Current Pending Revision</b></p>
+            {{template "actions" dict "PendingActions" .PendingActions "CSRFToken" .GetCSRFToken}}
+            <br/>
+            {{template "domainrevisionview" .PendingRevisionPage}}
+          {{else}}
+            <b>New Revision</b><br>
+            {{template "domainrevisionview" .PendingRevisionPage}}
+          {{end}}
+        {{end}}
+    </div>
+  </body>
+</html>
+{{end}}

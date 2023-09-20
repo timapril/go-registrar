@@ -1,0 +1,159 @@
+{{define "domainrevisionview"}}
+
+{{if .IsEditable}}
+  <br/>
+  {{if .IsNew}}
+    <form method='Post' action='/save/domainrevision'>
+      <input type='hidden' name='revision_domain_id' id='revision_domain_id' value='{{.ParentDomain.ID}}'>
+  {{else}}
+  <form method='Post' action='/update/domainrevision'>
+    <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+  {{end}}
+    <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+{{end}}
+
+  <div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+  <div class='form_name'>Parent ID: </div>{{.ParentDomain.ID}}</br>
+
+  {{template "revisionstates" dict "Revision" .Revision "Parent" .ParentDomain "IsEditable" .IsEditable "IsNew" .IsNew "IncludeExternal" true}}
+
+  <br/>
+  {{template "domainownership" dict "Revision" .Revision "Parent" .ParentDomain "IsEditable" .IsEditable "IsNew" .IsNew}}
+  <br/>
+  <div class='form_name'>Host Names:</div>
+  {{if .IsEditable}}
+    {{if .IsNew}}
+    <div class='hostname_list' id='hostname_list'>
+    {{range $id, $host := .SuggestedHostnames}}
+<div id="{{$host.FormDivName}}"><div class="form_name"></div><input type="hidden" id="hostname" name="hostname" value="{{$host.ID}}"><div class="title">{{$host.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_hostname('{{$host.ID}}', '{{$host.SuggestedRevisionValue "Name"}}');">Remove</a></div>
+    {{end}}
+    </div>
+    {{else}}
+      <div class='hostname_list' id='hostname_list'>
+      {{range $id, $host := .Revision.Hostnames}}
+<div id="{{$host.FormDivName}}"><div class="form_name"></div><input type="hidden" id="hostname" name="hostname" value="{{$host.ID}}"><div class="title">{{$host.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_hostname('{{$host.ID}}', '{{$host.SuggestedRevisionValue "Name"}}');">Remove</a></div>
+      {{end}}
+      </div>
+    {{end}}
+    <br/>
+    <div class='form_name'>Hostname To Add:</div>
+    <select name='to_add_hostname' id='to_add_hostname'>
+      <option value="none">None</option>
+      {{range $id, $host := .ValidHosts}}
+        <option value="{{$id}}">{{$host}}</option>
+      {{end}}
+    </select>
+    <input type='button' value='Add' id='push_hostname_button' onclick='push_hostname();'>
+    <br/>
+  {{else}}
+    {{range $id, $host := .Revision.Hostnames}}
+    <div id="current_{{$host.FormDivName}}">
+      <div class="form_name"></div>
+      <div class="title">{{$host.DisplayName}}</div>
+    </div>
+    {{end}}
+  {{end}}
+  <br/>
+  <br/>
+  <p><b>Note: All contacts must be set in order to submit the revision.</b><p>
+  <div class='form_name'>Registrant Contact:</div>{{template "contactdropdown" dict "FieldName" "revision_registrant_contact" "ValidContacts" .ValidContacts "CurrentSelection" .Revision.DomainRegistrant "Editable" .IsEditable "IsNew" .IsNew "Suggested" (.ParentDomain.SuggestedContactID "DomainRegistrant")}}<br>
+  <div class='form_name'>Admin Contact:</div>{{template "contactdropdown" dict "FieldName" "revision_admin_contact" "ValidContacts" .ValidContacts "CurrentSelection" .Revision.DomainAdminContact "Editable" .IsEditable "IsNew" .IsNew "Suggested" (.ParentDomain.SuggestedContactID "DomainAdminContact")}}<br/>
+  <div class='form_name'>Tech Contact:</div>{{template "contactdropdown" dict "FieldName" "revision_tech_contact" "ValidContacts" .ValidContacts "CurrentSelection" .Revision.DomainTechContact "Editable" .IsEditable "IsNew" .IsNew "Suggested" (.ParentDomain.SuggestedContactID "DomainTechContact")}}<br/>
+  <div class='form_name'>Billing Contact:</div>{{template "contactdropdown" dict "FieldName" "revision_billing_contact" "ValidContacts" .ValidContacts "CurrentSelection" .Revision.DomainBillingContact "Editable" .IsEditable "IsNew" .IsNew "Suggested" (.ParentDomain.SuggestedContactID "DomainBillingContact")}}<br/>
+  <br/>
+  <div class='form_name'>Current Registrar Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.DomainStatus}}{{end}}<br/>
+  <br/>
+  {{if .IsNew}}
+      <div class='form_name'>Client Hold:</div><input type='checkbox' name='revision_client_hold' id='revision_client_hold' {{if .ParentDomain.SuggestedRevisionBool "ClientHold"}} checked {{end}}><br/>
+      <div class='form_name'>Server Hold:</div><input type='checkbox' name='revision_server_hold' id='revision_server_hold' {{if .ParentDomain.SuggestedRevisionBool "ServerHold"}} checked {{end}}><br/>
+      <div class='form_name'>Client Renew Prohibited:</div><input type='checkbox' name='revision_client_renew' id='revision_client_renew' {{if .ParentDomain.SuggestedRevisionBool "ClientRenew"}} checked {{end}}><br/>
+      <div class='form_name'>Server Renew Prohibited:</div><input type='checkbox' name='revision_server_renew' id='revision_server_renew' {{if .ParentDomain.SuggestedRevisionBool "ServerRenew"}} checked {{end}}><br/>
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .ParentDomain.SuggestedRevisionBool "ClientDelete"}} checked {{end}}><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .ParentDomain.SuggestedRevisionBool "ServerDelete"}} checked {{end}}><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .ParentDomain.SuggestedRevisionBool "ClientTransfer"}} checked {{end}}><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .ParentDomain.SuggestedRevisionBool "ServerTransfer"}} checked {{end}}><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .ParentDomain.SuggestedRevisionBool "ClientUpdate"}} checked {{end}}><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .ParentDomain.SuggestedRevisionBool "ServerUpdate"}} checked {{end}}><br/>
+  {{else}}
+    {{if .IsEditable}}
+      <div class='form_name'>Client Hold:</div><input type='checkbox' name='revision_client_hold' id='revision_client_hold' {{if .Revision.ClientHoldStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Hold:</div><input type='checkbox' name='revision_server_hold' id='revision_server_hold' {{if .Revision.ServerHoldStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Renew Prohibited:</div><input type='checkbox' name='revision_client_renew' id='revision_client_renew' {{if .Revision.ClientRenewProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Renew Prohibited:</div><input type='checkbox' name='revision_server_renew' id='revision_server_renew' {{if .Revision.ServerRenewProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .Revision.ClientDeleteProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .Revision.ServerDeleteProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .Revision.ClientTransferProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .Revision.ServerTransferProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .Revision.ClientUpdateProhibitedStatus}} checked {{end}}><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .Revision.ServerUpdateProhibitedStatus}} checked {{end}}><br/>
+    {{else}}
+      <div class='form_name'>Client Hold:</div>{{if .Revision.ClientHoldStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Hold:</div>{{if .Revision.ServerHoldStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Renew Prohibited:</div>{{if .Revision.ClientRenewProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Renew Prohibited:</div>{{if .Revision.ServerRenewProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Delete Prohibited:</div>{{if .Revision.ClientDeleteProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Delete Prohibited:</div>{{if .Revision.ServerDeleteProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Transfer Prohibited:</div>{{if .Revision.ClientTransferProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Transfer Prohibited:</div>{{if .Revision.ServerTransferProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Client Update Prohibited:</div>{{if .Revision.ClientUpdateProhibitedStatus}} True {{else}} False {{end}}<br/>
+      <div class='form_name'>Server Update Prohibited:</div>{{if .Revision.ServerUpdateProhibitedStatus}} True {{else}} False {{end}}<br/>
+    {{end}}
+  {{end}}
+  <br/>
+  <div class='form_name'>DNSSEC Entries:</div>
+  {{if .IsEditable}}
+    {{if .IsNew}}
+      <div class='dnsseclist' id='dnssec_list'>
+        {{range $id, $dnssec := .SuggestedDSData}}
+          <div id="{{$dnssec.FormDivName}}"><div class="form_name"></div><input type="hidden" id="ds_entry" name="ds_entry" value="{{$dnssec.FormValue}}"><div class="title">{{$dnssec.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_ds_entry('{{$dnssec.FormDivName}}', '{{$dnssec.FormValue}}', '{{$dnssec.KeyTag}}', '{{$dnssec.Algorithm}}', '{{$dnssec.DigestType}}', '{{$dnssec.Digest}}');">Remove</a></div>
+        {{end}}
+      </div>
+    {{else}}
+      <div class='dnsseclist' id='dnssec_list'>
+        {{range $id, $dnssec := .Revision.DSDataEntries}}
+          <div id="{{$dnssec.FormDivName}}"><div class="form_name"></div><input type="hidden" id="ds_entry" name="ds_entry" value="{{$dnssec.FormValue}}"><div class="title">{{$dnssec.DisplayName}}</div>&nbsp;<a onclick="javascript:remove_ds_entry('{{$dnssec.FormDivName}}', '{{$dnssec.FormValue}}', '{{$dnssec.KeyTag}}', '{{$dnssec.Algorithm}}', '{{$dnssec.DigestType}}', '{{$dnssec.Digest}}');">Remove</a></div>
+        {{end}}
+      </div>
+    {{end}}
+    <br/>
+    <div class="form_name">DS Data to Add:</div>Key Tag: <input type=text name='to_add_key_tag' id='to_add_key_tag' oninput='ds_entry_change_event();'><br/>
+    <div class='form_name'>&nbsp;</div>Algorithm: <select name='to_add_alg' id='to_add_alg'>
+      {{range $id, $algo := .DNSSECAlgorithms}}
+        <option value='{{$id}}'>{{$id}}: {{$algo}}</option>
+      {{end}}
+    </select><br/>
+    <div class='form_name'>&nbsp;</div>Digest Type: <select name='to_add_digest_type' id='to_add_digest_type'>
+      {{range $id, $type := .DNSSECDigestTypes}}
+        <option value='{{$id}}'>{{$id}}: {{$type}}</option>
+      {{end}}
+    </select><br/>
+    <div class='form_name'>&nbsp;</div>Digest: <input type='text' name='to_add_digest' id='to_add_digest' oninput='ds_entry_change_event();'><br/>
+    <div class='form_name'>&nbsp;</div><input type='button' value='Add' id='push_ds_entry_button' onclick='push_ds_entry();'><br/>
+      <div class='form_name'></div><div class='display_message' id="ds_entry_add_message"></div><br/>
+  {{else}}
+    {{range $id, $dsEntry := .Revision.DSDataEntries}}
+    <div id="current_{{$dsEntry.FormDivName}}">
+      <div class="form_name"></div>
+      <div class="title">{{$dsEntry.DisplayName}}</div>
+    </div>
+    {{end}}
+  {{end}}
+
+  {{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentDomain "SavedNotes" .Revision.SavedNotes}}
+
+  {{template "approversetview" .}}
+
+  {{template "importantdates" .}}
+
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <input type='submit' value='Submit Revision'>
+    {{else}}
+      <input type='submit' value='Submit Updated Revision'>
+    {{end}}
+  </form>
+  {{end}}
+
+{{end}}

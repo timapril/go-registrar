@@ -1,0 +1,56 @@
+.form_name {
+  width:220px;
+  display: inline-block;
+}
+.note {
+  display: inline-block;
+  color: grey;
+  padding-left: 10px;
+}
+.current_state {
+  width:170px;
+  display: inline-block;
+}
+.change_request_title {
+  width:170px;
+  display: inline-block;
+}
+.edit_cell {
+  width:50%;
+  float:left;
+}
+.not_editable {
+  color:#B2B2B2;
+}
+.constant_value {
+  display: inline-block;
+}
+.container {
+  overflow: auto;
+}
+.emailRole {
+  display: inline-block;
+}
+.title {
+  display: inline-block;
+}
+td {
+  padding: 5px;
+}
+hr {
+  height:1px;
+  background:#333;
+  background-image:-webkit-linear-gradient(left, #ccc, #333, #ccc);
+}
+.display_message {
+  display: inline-block;
+}
+.actionButton {
+  background:transparent;
+  border-width:0px;
+  color:blue;
+  cursor: pointer;
+  color: #428bca;
+  text-decoration: none;
+  padding:0px;
+}

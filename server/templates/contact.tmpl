@@ -1,0 +1,116 @@
+{{define "contact"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Contact</h1>
+      </div>
+      <div class="container">
+        <div class='edit_cell'>
+          <p>
+          {{if .Editable}}
+            <form method='Post' action='/save/contact'>
+            <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+          {{else}}
+            <div class='current_state'><b>Current Registry State</b></div></br>
+          {{end}}
+            <div class='form_name'>Contact ID:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.ID}}{{end}}<br/>
+            <div class='form_name'>Contact State:</div>{{if .IsNew}}new (Not Created){{else}}{{.Con.State}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Contact Registry ID:</div>{{if .Editable}}<input type='text' name='contact_registry_id' id='contact_registry_id' value='{{.Con.ContactRegistryID}}'> Leave blank unless transfer{{else}}{{.Con.ContactRegistryID}}{{end}}<br/>
+            <div class='form_name'>Contact ROID:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.ContactROID}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Contact Name: </div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.Name}}{{end}}<br/>
+            <div class='form_name'>Contact Organization: </div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.Org}}{{end}}<br/>
+            <div class='form_name'>Contact Description:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.Description}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Street Line 1:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressStreet1}}{{end}}<br/>
+            <div class='form_name'>Street Line 2:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressStreet2}}{{end}}<br/>
+            <div class='form_name'>Street Line 3:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressStreet3}}{{end}}<br/>
+            <div class='form_name'>City:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressCity}}{{end}}<br/>
+            <div class='form_name'>State:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressState}}{{end}}<br/>
+            <div class='form_name'>Postal Code:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressPostalCode}}{{end}}<br/>
+            <div class='form_name'>Country:</div>{{if .IsNew}}Not Created Yet{{else}} {{.Con.AddressCountry}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Voice Number:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.VoicePhoneNumber}}{{end}}<br/>
+            <div class='form_name'>Voice Fax:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.VoicePhoneExtension}}{{end}}<br/>
+            <div class='form_name'>Fax Number:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.FaxPhoneNumber}}{{end}}<br/>
+            <div class='form_name'>Fax Fax:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.FaxPhoneExtension}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Email:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.EmailAddress}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Registry Contact ID:</div>{{.Con.ContactROID}}<br/>
+            <div class='form_name'>Current Registrar Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ContactStatus}}{{end}}<br/>
+            <div class='form_name'>Client Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ClientDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ServerDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ClientTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ServerTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ClientUpdateProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.ServerUpdateProhibitedStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Creating Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.CreateClientID}}{{end}}<br/>
+            <div class='form_name'>Sponsoring Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.SponsoringClientID}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Contact Create Date:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Con.CreateDate}}{{end}}<br/>
+            <div class='form_name'>Contact Update Date:</div>{{if .IsNew}}Not Updated Yet{{else}}  {{.Con.UpdateDate}}{{end}}<br/>
+            <div class='form_name'>Contact Transfer Date:</div>{{if .IsNew}}Not Transfered Yet{{else}}  {{.Con.TransferDate}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>EPP Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.EPPStatus}} ({{.Con.EPPLastUpdate}}){{end}}<br/>
+            <div class='form_name'>DNS Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.DNSStatus}} ({{.Con.DNSLastUpdate}}){{end}}<br/>
+            <br/>
+            <div class='form_name'>Pending Check</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.CheckRequired}}{{if .Con.CheckRequired}}{{else}}  <a href="/check/contact/{{.Con.ID}}">Toggle</a>{{end}}{{end}}<br/>
+            <div class='form_name'>Created:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.CreatedAt}} by {{.Con.CreatedBy}}{{end}}<br/>
+            <div class='form_name'>Updated:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Con.UpdatedAt}} by {{.Con.UpdatedBy}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Update Hold Status:</div><a href='/hold/contact/{{.Con.ID}}'>Hold Update Link</a><br/>
+            {{template "holdview" .Con}}
+            {{if .Editable}}
+              <input type='submit' name='Submit' value='Submit'/>
+            </form>
+            {{end}}
+          </p>
+        </div>
+        <!-- <div class='edit_cell'>
+          <p>
+            <div class='current_state'><b>WHOIS State</b></div>
+          </p>
+        </div> -->
+      </div>
+      <hr/>
+      <div class='container'>
+        {{if .IsNew}}
+          <p>No revisions can be created until the approver has been created</p>
+        {{else}}
+        <div class='edit_cell'>
+          {{if .Con.HasRevision}}
+            <p><b>Current Revision</b></p>
+            <p>
+              {{template "contactrevisionview" .CurrentRevisionPage}}
+            </p>
+          {{else}}
+            <p>No Revisions yet</p>
+          {{end}}
+        </div>
+        <div class='edit_cell'>
+          {{if .Con.HasPendingRevision}}
+            <p><b>Current Pending Revision</b></p>
+            {{template "actions" dict "PendingActions" .PendingActions "CSRFToken" .GetCSRFToken}}
+            <br/>
+            {{template "contactrevisionview" .PendingRevisionPage}}
+          {{else}}
+            <b>New Revision</b>
+            <br/>
+            {{template "contactrevisionview" .PendingRevisionPage}}
+          {{end}}
+        {{end}}
+    </div>
+  </body>
+</html>
+{{end}}

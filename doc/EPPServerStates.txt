@@ -1,0 +1,41 @@
+// From RFC 5730
+
+            |
+      V
+ +-----------------+                  +-----------------+
+ |   Waiting for   |     Connected    |     Prepare     |
+ |      Client     |----------------->|     Greeting    |
+ +-----------------+    or <hello>    +-----------------+
+ ^                                           |
+ | Close Connection                     Send |
+ |     or Idle                      Greeting |
+ +-----------------+                         V
+ |       End       |     Timeout      +-----------------+
+ |     Session     |<-----------------|   Waiting for   |
+ +-----------------+                  |      Client     |
+ ^    ^    ^           Send +-------->|  Authentication |
+ |    |    |       Response |         +-----------------+
+ |    |    |     +--------------+            |
+ |    |    |     | Prepare Fail |            | <login>
+ |    |    +-----|   Response   |            | Received
+ |    |    Send  +--------------+            V
+ |    |    2501          ^         +-----------------+
+ |    |   Response       |         |   Processing    |
+ |    |                  +---------|     <login>     |
+ |    |                  Auth Fail +-----------------+
+ |    |       Timeout                         |
+ |    +-------------------------------+       | Auth OK
+ |                                    |       V
+ |   +-----------------+  <hello>  +-----------------+
+ |   |     Prepare     |<----------|   Waiting for   |
+ |   |     Greeting    |---------->|   Command or    |
+ |   +-----------------+   Send    |     <hello>     |
+ | Send x5xx             Greeting  +-----------------+
+ | Response  +-----------------+  Send    ^  |
+ +-----------|     Prepare     | Response |  | Command
+             |     Response    |----------+  | Received
+             +-----------------+             V
+                             ^          +-----------------+
+                     Command |          |   Processing    |
+                   Processed +----------|     Command     |
+                                        +-----------------+

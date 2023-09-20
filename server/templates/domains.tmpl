@@ -1,0 +1,53 @@
+{{define "domains"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Domains</h1>
+      </div>
+      <p><a href="/new/domain">Add New Domain</a></p>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Domain Name
+            </td>
+            <td>
+              Hostnames
+            </td>
+          </thead>
+          {{range $domain := .Domains}}
+            <tr>
+              <td>
+                <a href='/view/domain/{{$domain.ID}}'>{{$domain.ID}}</a>
+              </td>
+              <td>
+                {{$domain.State}}
+              </td>
+              <td>
+                {{$domain.DomainName}}
+              </td>
+              <td>
+                <pre>{{$domain.PreviewHostnames}}</pre>
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+{{end}}

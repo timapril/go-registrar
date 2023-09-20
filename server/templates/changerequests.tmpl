@@ -1,0 +1,69 @@
+{{define "changerequests"}}
+
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Change Requests</h1>
+      </div>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Object Type
+            </td>
+            <td>
+              Object ID
+            </td>
+            <td>
+              Initial Revision
+            </td>
+            <td>
+              Proposed Revision
+            </td>
+          </thead>
+          {{range $changeRequest := .CRs}}
+            <tr>
+              <td>
+                <a href='/view/changerequest/{{$changeRequest.ID}}'>{{$changeRequest.ID}}</a>
+              </td>
+              <td>
+                {{$changeRequest.State}}
+              </td>
+              <td>
+                {{$changeRequest.RegistrarObjectType}}
+              </td>
+              <td>
+                {{$changeRequest.RegistrarObjectID}}
+              </td>
+              <td>
+                {{if $changeRequest.InitialRevisionID.Valid}}
+                  {{$changeRequest.InitialRevisionID.Value}}
+                {{else}}
+                  None
+                {{end}}
+              </td>
+              <td>
+                {{$changeRequest.ProposedRevisionID}}
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+
+{{end}}

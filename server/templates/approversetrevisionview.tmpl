@@ -1,0 +1,74 @@
+{{define "approversetrevisionview"}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <form method='Post' action='/save/approversetrevision'>
+        <input type='hidden' name='revision_approver_set_id' id='revision_approver_set_id' value='{{.ParentApproverSet.ID}}'>
+    {{else}}
+      <form method='Post' action='/update/approversetrevision'>
+        <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+    {{end}}
+
+    <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken}}">
+  {{end}}
+
+  <div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+  <div class='form_name'>Parent ID: </div>{{.ParentApproverSet.ID}}</br>
+
+  {{template "revisionstates" dict "Revision" .Revision "Parent" .ParentApproverSet "IsEditable" .IsEditable "IsNew" .IsNew "IncludeExternal" false}}
+
+  <br/>
+
+  <div class='form_name'>Approver Set Title:</div>{{if .IsEditable}}<input type='text' name='revision_title' id='revision_title' value='{{if .IsNew}}{{.ParentApproverSet.SuggestedRevisionValue "Title"}}{{else}}{{.Revision.Title}}{{end}}'>{{else}}{{.Revision.Title}}{{end}}<br/>
+  <div class='form_name'>Approver Set Description: </div>{{if .IsEditable}}<textarea name='revision_description' id='revision_description'>{{if .IsNew}}{{.ParentApproverSet.SuggestedRevisionValue "Description"}}{{else}}{{.Revision.Description}}{{end}}</textarea>{{else}}{{.Revision.Description}}{{end}}<br/>
+
+  <div class='form_name'>Approvers:</div><br/>
+
+  {{if .IsEditable}}
+    <div class='approverlist' id='approverlist'>
+    {{if .IsNew}}
+      {{$currentApprovers := .SuggestedApprovers}}
+      {{range $idx, $approver := $currentApprovers}}
+        <div id='approver_{{$idx}}'><div class='form_name'></div><input type='hidden' id='approver_id' name='approver_id' value='{{$idx}}'><div class='emailRole'>{{$approver}}</div>&nbsp;<a onclick='javascript:remove_approver({{$idx}});'>Remove</a></div><br/>
+      {{end}}
+    {{else}}
+      {{$currentApprovers := .Revision.Approvers}}
+      {{range $idx, $approver := $currentApprovers}}
+        <div id='approver_{{$idx}}'><div class='form_name'></div><input type='hidden' id='approver_id' name='approver_id' value='{{$idx}}'><div class='emailRole'>{{$approver.GetDisplayName}}</div>&nbsp;<a onclick='javascript:remove_approver({{$idx}});'>Remove</a></div><br/>
+      {{end}}
+    {{end}}
+    </div>
+    <div class='form_name'>Approver to Add:</div><select name='to_add_approver' id='to_add_approver'>
+                                                  <option value='none'></option>
+                                                  {{ $validApprovers := .ValidApprovers }}
+                                                  {{ range $id, $value := $validApprovers}}
+                                                  <option value='{{$id}}'>{{$value}}</option>
+                                                  {{end}}
+                                                </select>&nbsp;&nbsp;&nbsp;<input type='button' value='Add' id='push_approver_button' onclick='push_approver();'><br/>
+    <br/>
+  {{else}}
+
+      {{$currentApprovers := .Revision.Approvers}}
+      {{range $idx, $approver := $currentApprovers}}
+        <div class='form_name'></div>{{$approver.GetDisplayName}}<br/>
+      {{end}}
+    <br/>
+  {{end}}
+
+  {{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentApproverSet "SavedNotes" .Revision.SavedNotes}}
+
+  {{template "approversetview" .}}
+
+  {{template "importantdates" .}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <input type='submit' value='Submit Revision'>
+    {{else}}
+      <input type='submit' value='Submit Updated Revision'>
+    {{end}}
+  </form>
+  {{end}}
+{{end}}

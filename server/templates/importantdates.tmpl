@@ -1,0 +1,9 @@
+{{define "importantdates"}}
+  <br/>
+  <div class='form_name'>Created: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.CreatedAt}} by {{.Revision.CreatedBy}}{{end}}<br/>
+  <div class='form_name'>Updated: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.UpdatedAt}} by {{.Revision.UpdatedBy}}{{end}}<br/>
+  <div class='form_name'>Approval Started: </div>{{if .Revision.HasHappened "ApprovalStarted"}}{{.Revision.ApprovalStartTime}} by {{.Revision.ApprovalStartBy}}{{else}}Approval has not started{{end}}<br/>
+  <div class='form_name'>Approval Failed: </div>{{if .Revision.HasHappened "ApprovalFailed"}}{{.Revision.ApprovalFailedTime}}{{else}}Approval has not failed{{end}}<br/>
+  <div class='form_name'>Promoted Time: </div>{{if .Revision.HasHappened "Promoted"}}{{.Revision.PromotedTime}}{{else}}Revision has not been promoted{{end}}<br/>
+  <div class='form_name'>Superseded Time: </div>{{if .Revision.HasHappened "Superseded"}}{{.Revision.SupersededTime}}{{else}}Revision has not been superseded{{end}}<br/>
+{{end}}

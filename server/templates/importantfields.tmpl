@@ -1,0 +1,14 @@
+{{define "importantfields"}}
+
+<br/>
+<div class='form_name'>JIRA Issue / CR ID</div>{{if .IsEditable}}<input type='text' name='revision_issue_cr' id='revision_issue_cr' value="{{if not .IsNew}}{{.Revision.IssueCR}}{{end}}">{{else}}{{.Revision.IssueCR}}{{end}}<br/>
+<div class='form_name'>Object Notes</div>{{if .IsEditable}}<textarea name='revision_saved_notes' id='revision_saved_notes'>{{if .IsEditable}}{{if .IsNew}}{{.Parent.SuggestedRevisionValue "SavedObjectNote"}}{{else}}{{.SavedNotes}}{{end}}{{end}}</textarea>{{else}}<code style='whitespace: pre; word-break:normal; word-wrap: normal;'>{{.SavedNotes}}</code>{{end}}<br/>
+<div class='form_name'>Revision Notes</div>{{if .IsEditable}}<textarea name='revision_notes' id='revision_notes'>{{if not .IsNew}}{{.Revision.Notes}}{{else}}{{end}}</textarea>{{else}}<code style='white-space: pre;word-break: normal;word-wrap: normal;'>{{.Revision.Notes}}</code>{{end}}<br/>
+<br/>
+{{if .Revision.CRID.Valid}}
+  <div class='form_name'>Change Request ID: </div> {{.Revision.CRID.Value}} ( <a href='/view/changerequest/{{.Revision.CRID.Value}}'>Link</a> )<br/>
+{{else}}
+  <div class='form_name'>Change Request ID: </div> No Change Request Found<br/>
+{{end}}
+
+{{end}}

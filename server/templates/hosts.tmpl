@@ -1,0 +1,53 @@
+{{define "hosts"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Hosts</h1>
+      </div>
+      <p><a href="/new/host">Add New Host</a></p>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              Host Name
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Host Addresses
+            </td>
+          </thead>
+          {{range $host := .Hosts}}
+            <tr>
+              <td>
+                <a href='/view/host/{{$host.ID}}'>{{$host.ID}}</a>
+              </td>
+              <td>
+                {{$host.HostName}}
+              </td>
+              <td>
+                {{$host.State}}
+              </td>
+              <td>
+                <pre>{{$host.PreviewIPs}}</pre>
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+{{end}}

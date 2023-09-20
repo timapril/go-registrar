@@ -1,0 +1,37 @@
+{{define "domainownership"}}
+  <div class='form_name'>Domain Owners:</div>
+    {{if .IsEditable}}<input type=text name='revision_owners' id='revision_owners'
+      {{if .IsNew}}
+        value="{{.Parent.SuggestedRevisionValue "Owners"}}"
+      {{else}}
+        value="{{.Revision.Owners}}"
+      {{end}}
+    >{{else}}{{.Revision.Owners}}{{end}}<br/>
+    {{if .IsEditable}}<div class='form_name'>Domain Class:</div>
+      <select name="domain_class" id="domain_class" onchange="update_domain_class();">
+        <option value="deployed-critical" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "deployed-critical"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "deployed-critical"}} selected {{end}}{{end}}>Deployed - Critical</option>
+        <option value="deployed-in-use" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "deployed-in-use"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "deployed-in-use"}} selected {{end}}{{end}}>Deployed - In-Use</option>
+        <option value="corp-critical" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "corp-critical"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "corp-critical"}} selected {{end}}{{end}}>Corp - Critical</option>
+        <option value="corp-in-use-non-marketing" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "corp-in-use-non-marketing"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "corp-in-use-non-marketing"}} selected {{end}}{{end}}>Corp - In-Use (Non-Marketing)</option>
+        <option value="corp-in-use-marketing" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "corp-in-use-marketing"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "corp-in-use-marketing"}} selected {{end}}{{end}}>Corp - In-Use (Marketing)</option>
+        <option value="parked" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "parked"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "parked"}} selected {{end}}{{end}}>Parked</option>
+        <option value="other" {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "other"}} selected {{end}}{{else}}{{if .Revision.IsSelectedClass "other"}} selected {{end}}{{end}}>Other (please complete box below)</option>
+      </select><br/>
+      <div class='form_name'></div><input type="text" name="domain_class_other" id="domain_class_other"
+        {{if .IsNew}}
+          {{if .Parent.SuggestedRevisionBool "other"}}
+            value="{{.Parent.SuggestedRevisionValue "DomainClass"}}"
+          {{else}}
+            style="display:none;"
+          {{end}}
+        {{else}}
+          {{if .Revision.IsSelectedClass "other"}}
+            value="{{.Revision.Class}}"
+          {{else}}
+            style="display:none;"
+          {{end}}
+        {{end}}><br/>
+  {{else}}
+    <div class='form_name'>Domain Class:</div>{{.Revision.Class}}<br/>
+  {{end}}
+{{end}}

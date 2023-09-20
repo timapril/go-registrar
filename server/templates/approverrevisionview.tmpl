@@ -1,0 +1,60 @@
+{{define "approverrevisionview"}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <form method='Post' action='/save/approverrevision'>
+        <input type='hidden' name='revision_approver_id' id='revision_approver_id' value='{{.ParentApprover.ID}}'>
+    {{else}}
+    <form method='Post' action='/update/approverrevision'>
+      <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+    {{end}}
+      <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+  {{end}}
+
+  <div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+  <div class='form_name'>Parent ID: </div>{{.ParentApprover.ID}}</br>
+
+  {{template "revisionstates" dict "Revision" .Revision "Parent" .ParentApprover "IsEditable" .IsEditable "IsNew" .IsNew "IncludeExternal" false}}
+
+  <br/>
+
+  <div class='form_name'>Name: </div>{{if .IsEditable}}<input type='text' name='revision_name' id='revision_name' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "Name"}}{{else}}{{.Revision.Name}}{{end}}">{{else}}{{.Revision.Name}}{{end}}<br/>
+  <div class='form_name'>Approver Role:</div>{{if .IsEditable}}<input type='text' name='revision_role' id='revision_role' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "Role"}}{{else}}{{.Revision.Role}}{{end}}">{{else}}{{.Revision.Role}}{{end}}<br/>
+  <div class='form_name'>Email Address: </div>{{if .IsEditable}}<input type='text' name='revision_email' id='revision_email' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "EmailAddress"}}{{else}}{{.Revision.EmailAddress}}{{end}}">{{else}}{{.Revision.EmailAddress}}{{end}}<br/>
+  <div class='form_name'>Username: </div>{{if .IsEditable}}<input type='text' name='revision_username' id='revision_username' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "Username"}}{{else}}{{.Revision.Username}}{{end}}">{{else}}{{.Revision.Username}}{{end}}<br/>
+  <div class='form_name'>Employee ID: </div>{{if .IsEditable}}<input type='text' name='revision_empid' id='revision_empid' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "EmployeeID"}}{{else}}{{.Revision.EmployeeID}}{{end}}">{{else}}{{.Revision.EmployeeID}}{{end}}<br/>
+  <div class='form_name'>Department: </div>{{if .IsEditable}}<input type='text' name='revision_dept' id='revision_dept' value="{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "Department"}}{{else}}{{.Revision.Department}}{{end}}">{{else}}{{.Revision.Department}}{{end}}<br/>
+  <br/>
+  {{if .IsNew}}
+    <div class='form_name'>Is Admin:</div><input type='checkbox' name='is_admin' id='is_admin' {{if .ParentApprover.SuggestedRevisionBool "IsAdmin"}} checked {{end}}><br/>
+  {{else}}
+    {{if .IsEditable}}
+      <div class='form_name'>Is Admin:</div><input type='checkbox' name='is_admin' id='is_admin' {{if .Revision.IsAdmin}} checked {{end}}><br/>
+    {{else}}
+      <div class='form_name'>Is Admin:</div>{{if .Revision.IsAdmin}} True {{else}} False {{end}}<br/>
+    {{end}}
+  {{end}}
+  <br/>
+  <div class='form_name'>Fingerprint: </div>{{if .IsNew}}computed when submitted{{else}}{{.Revision.Fingerprint}}{{end}}<br/>
+  <div class='form_name'>Public Key: </div>{{if .IsEditable}}<textarea type='text' name='revision_pubkey' id='revision_pubkey'>{{if .IsNew}}{{.ParentApprover.SuggestedRevisionValue "PublicKey"}}{{else}}{{.Revision.PublicKey}}{{end}}</textarea>{{else}}<code style='white-space: pre;word-break: normal;word-wrap: normal;'>{{.Revision.PublicKey}}</code>{{end}}<br/>
+
+
+  {{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentApprover "SavedNotes" .Revision.SavedNotes}}
+
+  {{template "approversetview" .}}
+
+  {{template "importantdates" .}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <input type='submit' value='Submit Revision'>
+    {{else}}
+      <input type='submit' value='Submit Updated Revision'>
+    {{end}}
+  </form>
+  {{end}}
+
+
+{{end}}

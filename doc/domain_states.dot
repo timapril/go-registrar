@@ -1,0 +1,22 @@
+digraph domain {
+  new -> pendingnew [label="revision submitted\nfor approval"]
+  pendingnew -> new [label="approval\ndeclined"]
+  pendingnew -> active [ label="revision approved\nand revision\ndesired state == active"]
+  pendingnew -> inactive [ label="revision approved\nand revision desired state == inactive"]
+  active -> activependingapproval [ label="approval for\na new revision\nhas been requested"]
+  inactive -> inactivependingapproval [ label="approval for\na new revision\nhas been requested"]
+  activependingapproval -> active [ label="revision approved\nand revision\ndesired state == active"]
+  inactivependingapproval -> active [ label="revision approved\nand revision\ndesired state == active"]
+  activependingapproval -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+  inactivependingapproval -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+
+  newexternal -> pendingnewexternal [label="revision submitted\nfor approval"]
+  pendingnewexternal -> newexternal [label="approval\ndeclined"]
+  pendingnewexternal -> external [label="revision approved\nand revision\ndesired state == external"]
+  external -> externalpendingapproval [label="approval for\na new revision\nhas been requested"]
+  externalpendingapproval -> external [label="approval failed or\napproved with\ndesired state == external"]
+  externalpendingapproval -> active [ label="revision approved\nand revision\ndesired state == active"]
+  externalpendingapproval -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+
+  activependingapproval -> external [ label="revision approved\nand revision\ndesired state == external"]
+}

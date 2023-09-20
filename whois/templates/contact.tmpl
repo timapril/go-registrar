@@ -1,0 +1,15 @@
+{{define "contact"}}Registry {{.Type}} ID:
+{{.Type}} Name: {{.Contact.Name}}
+{{.Type}} Organization: {{.Contact.Org}}
+{{.Type}} Street 1: {{.Contact.AddressStreet1}}
+{{.Type}} Street 2: {{.Contact.AddressStreet2}}
+{{.Type}} Street 3: {{.Contact.AddressStreet3}}
+{{.Type}} City: {{.Contact.AddressCity}}
+{{.Type}} State/Province: {{.Contact.AddressState}}
+{{.Type}} Postal Code: {{.Contact.AddressPostalCode}}
+{{.Type}} Country: {{.Contact.AddressCountry}}
+{{.Type}} Phone: {{.Contact.VoicePhoneNumber}}
+{{.Type}} Phone Ext: {{.Contact.VoicePhoneExtension}}
+{{.Type}} Fax: {{.Contact.FaxPhoneNumber}}
+{{.Type}} Fax Ext: {{.Contact.FaxPhoneExtension}}
+{{.Type}} Email: {{.Contact.EmailAddress}}{{end}}

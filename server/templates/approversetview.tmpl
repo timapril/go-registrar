@@ -1,0 +1,130 @@
+{{define "approversetview"}}
+  <br/>
+  {{if .IsNew}}
+    {{$requiredApprovers := .SuggestedRequiredApprovers}}
+    <div class='form_name'>Required Approver Sets:</div><br/>
+    <div class='approversetlist' id='approver_set_required_list'>
+      {{range $idx, $approverSet := $requiredApprovers}}
+        <div id='approver_set_required_{{$approverSet.ID}}'>
+          <div class='form_name'></div>
+          <input type='hidden' id='approver_set_required_id' name='approver_set_required_id' value='{{$approverSet.ID}}'>
+          <div class='title'>{{$approverSet.DisplayName}}</div>&nbsp;
+          {{if ne $approverSet.ID 1}}
+          <a onclick='javascript:remove_approver_set("required",{{$approverSet.ID}});'>Remove</a>
+          {{else}}
+          <span title="Approver set 1 can't be removed from the required set"><strike>Remove</strike></span>
+          {{end}}
+        </div>
+        <br/>
+      {{end}}
+    </div>
+    <div class='form_name'>Approver Set to Add:</div>
+    <select name='to_add_approver_required' id='to_add_approver_required'>
+      <option value='none'></option>
+      {{ $validApprovers := .ValidApproverSets }}
+      {{ range $id, $value := $validApprovers}}
+        <option value='{{$id}}'>{{$value}}</option>
+      {{end}}
+    </select>&nbsp;&nbsp;&nbsp;
+    <input type='button' value='Add' id='push_approver_set_req_button' onclick='push_approver_set("required");'>
+    <br/>
+  {{else}}
+    {{$requiredApprovers := .Revision.RequiredApproverSets}}
+    {{if .IsEditable}}
+      <div class='form_name'>Required Approver Sets:</div><br/>
+      <div class='approversetlist' id='approver_set_required_list'>
+        {{range $idx, $approverSet := $requiredApprovers}}
+          <div id='approver_set_required_{{$approverSet.ID}}'>
+            <div class='form_name'></div>
+            <input type='hidden' id='approver_set_required_id' name='approver_set_required_id' value='{{$approverSet.ID}}'>
+            <div class='title'>{{$approverSet.GetDisplayName}}</div>&nbsp;
+            {{if ne $approverSet.ID 1}}
+            <a onclick='javascript:remove_approver_set("required",{{$approverSet.ID}});'>Remove</a>
+            {{else}}
+            <span title="Approver set 1 can't be removed from the required set"><strike>Remove</strike></span>
+            {{end}}
+          </div>
+          <br/>
+        {{end}}
+      </div>
+      <div class='form_name'>Approver Set to Add:</div>
+      <select name='to_add_approver_required' id='to_add_approver_required'>
+        <option value='none'></option>
+        {{ $validApprovers := .ValidApproverSets }}
+        {{ range $id, $value := $validApprovers}}
+          <option value='{{$id}}'>{{$value}}</option>
+        {{end}}
+      </select>&nbsp;&nbsp;&nbsp;
+      <input type='button' value='Add' id='push_approver_set_req_button' onclick='push_approver_set("required");'>
+      <br/>
+    {{else}}
+      <div class='form_name'>Required Approver Sets:</div><br/>
+      <div class='approverlist' id='requiredapproverlist'>
+        {{range $idx, $approverSet := $requiredApprovers}}
+          <div class='form_name'></div>{{$approverSet.GetDisplayName}}<br/>
+        {{end}}
+      </div><br/>
+    {{end}}
+  {{end}}
+  <br/>
+  {{if .IsNew}}
+    {{$informedApprovers := .SuggestedInformedApprovers}}
+    <br/>
+    <div class='form_name'>Informed Approver Sets:</div><br/>
+    <div class='approversetlist' id='approver_set_informed_list'>
+      {{range $idx, $approverSet := $informedApprovers}}
+        <div id='approver_set_informed_{{$approverSet.ID}}'>
+          <div class='form_name'></div>
+          <input type='hidden' id='approver_set_informed_id' name='approver_set_informed_id' value='{{$approverSet.ID}}'>
+          <div class='title'>{{$approverSet.DisplayName}}</div>&nbsp;
+          <a onclick='javascript:remove_approver_set("informed",{{$approverSet.ID}});'>Remove</a>
+        </div>
+        <br/>
+      {{end}}
+    </div>
+    <div class='form_name'>Approver Set to Add:</div>
+    <select name='to_add_approver_informed' id='to_add_approver_informed'>
+      <option value='none'></option>
+      {{ $validApprovers := .ValidApproverSets }}
+      {{ range $id, $value := $validApprovers}}
+      <option value='{{$id}}'>{{$value}}</option>
+      {{end}}
+    </select>&nbsp;&nbsp;&nbsp;
+    <input type='button' value='Add' id='push_approver_set_inf_button' onclick='push_approver_set("informed");'>
+    <br/>
+  {{else}}
+    {{$informedApprovers := .Revision.InformedApproverSets}}
+    {{if .IsEditable}}
+      <br/>
+      <div class='form_name'>Informed Approver Sets:</div><br/>
+      <div class='approversetlist' id='approver_set_informed_list'>
+        {{range $idx, $approverSet := $informedApprovers}}
+          <div id='approver_set_informed_{{$approverSet.ID}}'>
+            <div class='form_name'></div>
+            <input type='hidden' id='approver_set_informed_id' name='approver_set_informed_id' value='{{$approverSet.ID}}'>
+            <div class='title'>{{$approverSet.GetDisplayName}}</div>&nbsp;
+            <a onclick='javascript:remove_approver_set("informed",{{$approverSet.ID}});'>Remove</a>
+          </div>
+          <br/>
+        {{end}}
+      </div>
+      <div class='form_name'>Approver Set to Add:</div>
+      <select name='to_add_approver_informed' id='to_add_approver_informed'>
+        <option value='none'></option>
+        {{ $validApprovers := .ValidApproverSets }}
+        {{ range $id, $value := $validApprovers}}
+        <option value='{{$id}}'>{{$value}}</option>
+        {{end}}
+      </select>&nbsp;&nbsp;&nbsp;
+      <input type='button' value='Add' id='push_approver_set_inf_button' onclick='push_approver_set("informed");'>
+      <br/>
+    {{else}}
+      <div class='form_name'>Informed Approver Sets:</div><br/>
+      <div class='approversetlist' id='informedapproversetlist'>
+        {{range $idx, $approverSet := $informedApprovers}}
+          <div class='form_name'></div>{{$approverSet.GetDisplayName}}<br/>
+        {{end}}
+      </div>
+    {{end}}
+  {{end}}
+{{end}}

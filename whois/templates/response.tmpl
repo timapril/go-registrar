@@ -1,0 +1,21 @@
+{{define "response"}}
+Domain Name: {{.DomainName}}
+Registry Domain ID: {{.DomainObject.DomainROID}}
+Registrar WHOIS Server: whois.example.com
+Registrar URL: http://example.com
+Updated Date: {{.DomainObject.DomainUpdateDate}}
+Creation Date: {{.DomainObject.DomainCreationDate}}
+Registrar: Example, LLC.
+Registrar IANA ID:
+Registrar Abuse Contact Email: abuse@example.com
+Registrar Abuse Contact Phone: +1.8885551212
+{{range $status := .DomainObject.DomainStatuses}}Domain Status: {{$status}}
+{{end}}{{template "contact" dict "Type" "Registrant" "Contact" .RegistrantContact }}
+{{template "contact" dict "Type" "Admin" "Contact" .AdminContact }}
+{{template "contact" dict "Type" "Tech" "Contact" .TechContact }}
+{{range $hostname := .Hostnames}}Name Server: {{$hostname}}
+{{end}}DNSSEC: Unsigned
+
+URL of the ICANN WHOIS Data Problem Reporting System: http://wdprs.internic.net/
+>>> Last update of WHOIS database: {{.LastUpdate}} <<<
+{{end}}

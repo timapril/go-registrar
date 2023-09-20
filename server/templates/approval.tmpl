@@ -1,0 +1,78 @@
+{{define "approval"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Approval Request</h1>
+      </div>
+
+      <div class="container">
+        <div class='current_state'><b>Current State</b></div></br>
+          <div class='form_name'>Approval ID: </div>{{.App.ID}}<br/>
+          <div class='form_name'>Approval State: </div>{{.App.State}}<br/>
+          <div class='form_name'>Change Request ID: </div>{{.App.ChangeRequestID}}&nbsp;( <a href='/view/changerequest/{{.App.ChangeRequestID}}'>link</a> )<br/>
+          <div class='form_name'>Approver Set: </div>{{.App.ApproverSetID}}<br/>
+          <div class='form_name'>Approver Set Title: </div>{{.App.ApprovalApproverSet.GetCurrentValue "Title"}}<br>
+          <div class='form_name'>Approvers: </div><div style='display:inline-block'>
+            {{$approvers := .App.ApprovalApproverSet.CurrentRevision.Approvers}}
+            {{$id := .App.ID}}
+            {{$csrf := .GetCSRFToken}}
+            {{range $idx, $approver := $approvers}}
+              <form method="POST" action="/action/approval/{{$id}}/download">
+                <input type='hidden' name='csrf_token' id='csrf_token' value='{{$csrf}}'>
+                <input type='hidden' name='approverid' id='approverid' value='{{$approver.ID}}'>
+                <input type=submit class="actionButton" value="Download for {{$approver.GetCurrentValue "EmailAddress"}}">
+              </form>
+            {{end}}
+          </div><br/>
+          {{if .CanApprove}}
+            <div class='form_name'>Download Object:</div>
+            <div style="display:inline-block;">
+              <form method="POST" action="/action/approval/{{.App.ID}}/download">
+                <input type='hidden' name='csrf_token' id='csrf_token' value='{{.GetCSRFToken}}'>
+                <input type=submit class="actionButton" value="Download">
+              </form>
+            </div>
+          {{end}}
+          {{if .IsEditable}}
+            <form method='post' action='/update/approval' enctype="multipart/form-data">
+              <input type='hidden' name='id' id='id' value='{{.App.ID}}'>
+              <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+          <div class='form_name'>Upload Signature:</div><input type="file" name="sig" id="sig">
+          {{else}}
+            <div class='form_name'>Download Signature:</div>{{if .App.IsSigned}}<form method="POST" action="/action/approval/{{.App.ID}}/downloadsig"><input type='hidden' name='csrf_token' id='csrf_token' value='{{$csrf}}'><input type=submit class="actionButton" value="Download (Length: {{.SigLen}} bytes)"></form><br/>{{else}}Not Signed{{end}}
+          {{end}}
+          {{if .HasSigner}}
+            <div class='form_name'>Signed By:</div>
+            {{range $idx, $approver := .Signers}}
+              {{$approver.GetCurrentValue "EmailAddress"}}
+            {{end}}
+          {{end}}<br/>
+          <br/>
+          <div class='form_name'>Created: </div>{{.App.CreatedAt}} by {{.App.CreatedBy}}<br/>
+          <div class='form_name'>Updated: </div>{{.App.UpdatedAt}} by {{.App.UpdatedBy}}<br/>
+          {{if .IsEditable}}
+            <input type="submit" value="Update Approval">
+          </form>
+          {{end}}
+        </p>
+      </div>
+      <div>
+        To sign, run the following:
+        <pre>gpg --clearsign approval{{.App.ID}}-user.txt</pre>
+
+        To verify your signiture, run the following:
+        <pre>gpg --verify approval{{.App.ID}}-user.txt.asc</pre>
+      </div>
+      <hr/>
+    </div>
+  </body>
+</html>
+{{end}}

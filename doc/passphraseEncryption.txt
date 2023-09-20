@@ -1,0 +1,67 @@
+# Introduction
+
+The passphrase for the EPP connections must be provided to the EPP client in
+order to connect to the EPP servers. To make the passphrases accessible but
+not in cleartext on the provisioning image, they are stored, encrypted to the
+HSM key in the Registrar database.
+
+# Encrypting a new passphrase - Automated
+
+To encrypt the passphrase, you will need to place the passphrase in a file on
+disk and have the certificate on the same machine. Once you have both files on
+disk, run the encrypt.sh script in the following way:
+
+  ./encrypt.sh /path/to/certificate.crt /path/to/plaintext/passphrase.txt
+
+The above command will generate a file titled enc.pass.b64 in the directory
+where the script was run.
+
+# Encrypting a new passphrase - Manual
+
+The process to encrypt the passphrase if fairly simple. Follow the steps below
+to create a new passphrase encryption.
+
+## Generate the public key from the certificate
+
+First you will have to generate the RSA public key from the x509 certificate
+for the key that is in the HSM. To do so, run this command replacing the path
+to the certificate and the path to where you would like to place the public key.
+
+  openssl x509 -pubkey -noout -in /path/to/cert.crt -out /path/to/pubkey.pubkey
+
+  Ex:
+    openssl x509 -pubkey -noout -in /Users/tapril/srs-devkey/dev.crt > ./dev.key
+
+## Encrypting the passphrase
+
+First, save the passphrase to a file on disk and record the path.
+
+Next run the following command, replacing the path to the public key with the
+path that you used in the previous section.
+
+  cat /path/to/passphrase | openssl rsautl -encrypt -pubin -inkey /path/to/pubkey.pubkey | base64
+
+  Ex:
+    cat pass.txt | openssl rsautl -encrypt -pubin -inkey ./dev.key  | base64 > pass.enc
+
+That command will output a base64 blob of the encrypted key.
+
+## Uploading the encrypted key
+
+If you have direct SQL access to the database, you can upload the key base64
+encoded blob directly into the database. The encrypted blob should be placed in
+the e_p_p_encrypted_passphrases table in the row with the username that matches
+the passphrase you are uploading. The alternate option is to use the
+Registrar api tool and the SetEncryptedPassphrase call.
+
+## Cleanup
+
+Be sure to remove the passphrase on disk by running the following command
+replacing the path to the unencrypted passphrase.
+
+  shread --verbose /path/to/passphrase
+
+
+# Sources
+
+http://krisjordan.com/essays/encrypting-with-rsa-key-pairs

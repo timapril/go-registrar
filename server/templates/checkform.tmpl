@@ -1,0 +1,12 @@
+{{define "checkform"}}
+  {{if .Obj.CheckRequired}}
+    <div class='form_name'></div>Check required is already set<br/>
+  {{else}}
+    <form method="POST" action="/check/update/{{.Obj.GetType}}/{{.Obj.ID}}">
+      <input type='hidden' name='csrf_token' id='csrf_token' value='{{.CSRFToken}}'>
+      <input type="hidden" name="check_status" id="check_status" value="true">
+      <div class='form_name'></div><input type=submit value="Mark for check" id="update_check" name="update_check">
+    </form>
+  {{end}}
+<br/>
+{{end}}

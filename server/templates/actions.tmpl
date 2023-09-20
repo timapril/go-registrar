@@ -1,0 +1,12 @@
+{{define "actions"}}
+  <p>&nbsp;&nbsp;Possible Actions</p><ul>
+    {{ $token := .CSRFToken }}
+    {{ $pendingActions := .PendingActions}}
+    {{range $title, $link := $pendingActions }}
+      <li><form method="POST" action="{{$link}}">
+        <input type='hidden' name='csrf_token' id='csrf_token' value='{{$token}}'>
+        <input type=submit class="actionButton" value="{{$title}}">
+      </form></li>
+    {{end}}
+  </ul>
+{{end}}

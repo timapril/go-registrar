@@ -1,0 +1,11 @@
+digraph approverSetRevisionState {
+  bootstrap -> superseded [label="a newer revision\nhas been approved"]
+  new -> pendingapproval  [label="the revision has\nbeen submitted for approval"]
+  new -> cancelled [label="the revision\nhas been cancelled"]
+  pendingapproval -> active [label="the revision\nwas approved\n(desired state == active)"]
+  pendingapproval -> inactive [label="the revision\nwas approved\n(desired state == inactive)"]
+  pendingapproval -> approvalfailed [label="the revision\nwas declined"]
+  pendingapproval -> cancelled [label="the revision\nhas been cancelled"]
+  active -> superseded [label="a newer revision\nhas been approved"]
+  inactive -> superseded [label="a newer revision\nhas been approved"]
+}

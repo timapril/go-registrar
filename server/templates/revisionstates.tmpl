@@ -1,0 +1,11 @@
+{{define "revisionstates"}}
+
+<br/>
+<div class='form_name'>Current State: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.RevisionState}}{{end}}<br/>
+<div class='form_name'>Desired State: </div>{{if .IsEditable}}<select name='revision_desiredstate' id='revision_desiredstate'>
+                                            <option {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "DesiredStateActive"}} selected {{end}}{{else}}{{if .Revision.IsDesiredState "active"}} selected {{end}}{{end}} value='active'>active</option>
+                                            <option {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "DesiredStateInactive"}} selected {{end}}{{else}}{{if .Revision.IsDesiredState "inactive"}} selected {{end}}{{end}} value='inactive'>inactive</option>
+                                            {{if .IncludeExternal}}<option {{if .IsNew}}{{if .Parent.SuggestedRevisionBool "DesiredStateExternal"}} selected {{end}}{{else}}{{if .Revision.IsDesiredState "external"}} selected {{end}}{{end}} value='external'>external</option>{{end}}
+                                          </select>{{else}}{{.Revision.DesiredState}}{{end}}<br/>
+
+{{end}}

@@ -1,0 +1,16 @@
+digraph approverSetState {
+  bootstrap -> pendingbootstrap [ label="revision submitted\nfor approval" ];
+  pendingbootstrap -> bootstrap [ label="approval\ndeclined"];
+  new -> pendingnew [ label="revision submitted\nfor approval" ];
+  pendingnew -> new [ label="approval\ndeclined" ];
+  pendingbootstrap -> active [ label="revision approved\nand revision\ndesired state == active"]
+  pendingbootstrap -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+  pendingnew -> active [ label="revision approved\nand revision\ndesired state == active"]
+  pendingnew -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+  active -> activependingapproval [ label="approval for a\nnew revision has\nbeen requested"]
+  inactive -> inactivependingapproval [ label="approval for\na new revision has\nbeen requested"]
+  activependingapproval -> active [ label="revision approved\nand revision\ndesired state == active"]
+  inactivependingapproval -> active [ label="revision approved\nand revision\ndesired state == active"]
+  activependingapproval -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+  inactivependingapproval -> inactive [ label="revision approved\nand revision\ndesired state == inactive"]
+}

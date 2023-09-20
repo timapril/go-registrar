@@ -1,0 +1,66 @@
+{{define "approverset"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Approver Set</h1>
+      </div>
+
+      <div class="container">
+        {{if .Editable}}
+          <p>
+            <form method='Post' action='/save/approverset'>
+            <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+        {{else}}
+          <p>
+            <div class='current_state'><b>Current State</b></div></br>
+        {{end}}
+
+          <div class='form_name'>Approver Set ID: </div>{{if .IsNew}}--Not Set Yet--{{else}}{{.AppS.ID}}{{end}}<br/>
+          <div class='form_name'>Approver Set State:</div>{{if .IsNew}}new (not created yet){{else}}{{.AppS.State}}{{end}}<br/>
+          <br/>
+          <div class='form_name'>Created: </div>{{if .IsNew}}Not Created Yet{{else}}{{.AppS.CreatedAt}} by {{.AppS.CreatedBy}}{{end}}<br/>
+          <div class='form_name'>Updated: </div>{{if .IsNew}}Not Created Yet{{else}}{{.AppS.UpdatedAt}} by {{.AppS.UpdatedBy}}{{end}}<br/>
+        {{if .Editable}}
+          <input type='submit' name='Submit' value='Submit'/>
+        </form>
+        {{end}}
+        </p>
+      </div>
+      <hr/>
+      <div class='container'>
+        {{if .IsNew}}
+          <p>No revisions can be created until the approver has been created</p>
+        {{else}}
+          <div class='edit_cell'>
+            {{if .AppS.HasRevision}}
+              <p><b>Current Revision</b></p>
+              {{template "approversetrevisionview" .CurrentRevisionPage}}
+            {{else}}
+              <p>No Revisions yet</p>
+            {{end}}
+          </div>
+          <div class='edit_cell'>
+            {{if .AppS.HasPendingRevision}}
+              <p><b>Current Pending Revision</b></p>
+              {{template "actions" dict "PendingActions" .PendingActions "CSRFToken" .GetCSRFToken}}
+              <br/>
+              {{template "approversetrevisionview" .PendingRevisionPage}}
+            {{else}}
+              <b>New Revision</b><br>
+              {{template "approversetrevisionview" .PendingRevisionPage}}
+            {{end}}
+          </div>
+        {{end}}
+      </div>
+      <hr/>
+    </div>
+  </body>
+</html>
+{{end}}

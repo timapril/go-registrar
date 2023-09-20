@@ -1,0 +1,87 @@
+{{define "contactrevisionview"}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <form method='Post' action='/save/contactrevision'>
+        <input type='hidden' name='revision_contact_id' id='revision_contact_id' value='{{.ParentContact.ID}}'>
+    {{else}}
+      <form method='Post' action='/update/contactrevision'>
+        <input type='hidden' name='id' id='id' value='{{.Revision.ID}}'>
+    {{end}}
+
+    <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+  {{end}}
+
+  <div class='form_name'>Revision ID: </div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ID}}{{end}}</br>
+  <div class='form_name'>Parent ID: </div>{{.ParentContact.ID}}</br>
+
+  {{template "revisionstates" dict "Revision" .Revision "Parent" .ParentContact "IsEditable" .IsEditable "IsNew" .IsNew "IncludeExternal" false}}
+
+  <br/>
+  <div class='form_name'>Contact Name: </div>{{if .IsEditable}}<input type='text' name='revision_name' id='revision_name' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Name"}}{{else}}{{.Revision.Name}}{{end}}'>{{else}}{{.Revision.Name}}{{end}}<br/>
+  <div class='form_name'>Contact Organization: </div>{{if .IsEditable}}<input type='text' name='revision_org' id='revision_org' value="{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Org"}}{{else}}{{.Revision.Org}}{{end}}">{{else}}{{.Revision.Org}}{{end}}<br/>
+  <div class='form_name'>Email Address:</div>{{if .IsEditable}}<input type='text' name='revision_email' id='revision_email' value="{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Email"}}{{else}}{{.Revision.EmailAddress}}{{end}}">{{else}}{{.Revision.EmailAddress}}{{end}}<br/>
+  <br/>
+
+  <div class='form_name'>Street Line 1:</div>{{if .IsEditable}}<input type='text' name='revision_addess_street_1' id='revision_addess_street_1' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Street1"}}{{else}}{{.Revision.AddressStreet1}}{{end}}'>{{else}}{{.Revision.AddressStreet1}}{{end}}<br/>
+  <div class='form_name'>Street Line 2:</div>{{if .IsEditable}}<input type='text' name='revision_addess_street_2' id='revision_addess_street_2' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Street2"}}{{else}}{{.Revision.AddressStreet2}}{{end}}'>{{else}}{{.Revision.AddressStreet2}}{{end}}<br/>
+  <div class='form_name'>Street Line 3:</div>{{if .IsEditable}}<input type='text' name='revision_addess_street_3' id='revision_addess_street_3' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Street3"}}{{else}}{{.Revision.AddressStreet3}}{{end}}'>{{else}}{{.Revision.AddressStreet3}}{{end}}<br/>
+  <div class='form_name'>City:</div>{{if .IsEditable}}<input type='text' name='revision_address_city' id='revision_address_city' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "City"}}{{else}}{{.Revision.AddressCity}}{{end}}'>{{else}}{{.Revision.AddressCity}}{{end}}<br/>
+  <div class='form_name'>State:</div>{{if .IsEditable}}<input type='text' name='revision_address_state' id='revision_address_state' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "State"}}{{else}}{{.Revision.AddressState}}{{end}}'>{{else}}{{.Revision.AddressState}}{{end}}<br/>
+  <div class='form_name'>Postal Code:</div>{{if .IsEditable}}<input type='text' name='revision_address_postal_code' id=' revision_address_postal_code' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "PostalCode"}}{{else}}{{.Revision.AddressPostalCode}}{{end}}'>{{else}}{{.Revision.AddressPostalCode}}{{end}}<br/>
+  <div class='form_name'>Country:</div>{{if .IsEditable}}<input type='text' name='revision_address_country' id='revision_address_country' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "Country"}}{{else}}{{.Revision.AddressCountry}}{{end}}'>{{else}}{{.Revision.AddressCountry}}{{end}}<br/>
+  <br/>
+
+  <div class='form_name'>Voice Number:</div>{{if .IsEditable}}<input type='text' name='revision_voice_phone_number' id='revision_voice_phone_number' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "VoiceNumber"}}{{else}}{{.Revision.VoicePhoneNumber}}{{end}}'>{{else}}{{.Revision.VoicePhoneNumber}}{{end}}<br/>
+  <div class='form_name'>Voice Extension:</div>{{if .IsEditable}}<input type='text' name='revision_voice_phone_extension' id='revision_voice_phone_extension' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "VoiceExt"}}{{else}}{{.Revision.VoicePhoneExtension}}{{end}}'>{{else}}{{.Revision.VoicePhoneExtension}}{{end}}<br/>
+
+  <div class='form_name'>Fax Number:</div>{{if .IsEditable}}<input type='text' name='revision_fax_phone_number' id='revision_fax_phone_number' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "FaxNumber"}}{{else}}{{.Revision.FaxPhoneNumber}}{{end}}'>{{else}}{{.Revision.FaxPhoneNumber}}{{end}}<br/>
+  <div class='form_name'>Fax Extension:</div>{{if .IsEditable}}<input type='text' name='revision_fax_phone_extension' id='revision_fax_phone_extension' value='{{if .IsNew}}{{.ParentContact.SuggestedRevisionValue "FaxExt"}}{{else}}{{.Revision.FaxPhoneExtension}}{{end}}'>{{else}}{{.Revision.FaxPhoneExtension}}{{end}}<br/>
+  <br/>
+
+  <div class='form_name'>Current Registrar Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Revision.ContactStatus}}{{end}}<br/>
+  <br/>
+
+  {{if .IsNew}}
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .ParentContact.SuggestedRevisionBool "ClientDelete"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .ParentContact.SuggestedRevisionBool "ServerDelete"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .ParentContact.SuggestedRevisionBool "ClientTransfer"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .ParentContact.SuggestedRevisionBool "ServerTransfer"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .ParentContact.SuggestedRevisionBool "ClientUpdate"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .ParentContact.SuggestedRevisionBool "ServerUpdate"}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+  {{else}}
+    {{if .IsEditable}}
+      <div class='form_name'>Client Delete Prohibited:</div><input type='checkbox' name='revision_client_delete' id='revision_client_delete' {{if .Revision.ClientDeleteProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Delete Prohibited:</div><input type='checkbox' name='revision_server_delete' id='revision_server_delete' {{if .Revision.ServerDeleteProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div><input type='checkbox' name='revision_client_transfer' id='revision_client_transfer' {{if .Revision.ClientTransferProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div><input type='checkbox' name='revision_server_transfer' id='revision_server_transfer' {{if .Revision.ServerTransferProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Update Prohibited:</div><input type='checkbox' name='revision_client_update' id='revision_client_update' {{if .Revision.ClientUpdateProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Update Prohibited:</div><input type='checkbox' name='revision_server_update' id='revision_server_update' {{if .Revision.ServerUpdateProhibitedStatus}} checked {{end}}><div class="note">Not supported for COM/NET</div><br/>
+    {{else}}
+      <div class='form_name'>Client Delete Prohibited:</div>{{if .Revision.ClientDeleteProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Delete Prohibited:</div>{{if .Revision.ServerDeleteProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Transfer Prohibited:</div>{{if .Revision.ClientTransferProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Transfer Prohibited:</div>{{if .Revision.ServerTransferProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Client Update Prohibited:</div>{{if .Revision.ClientUpdateProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+      <div class='form_name'>Server Update Prohibited:</div>{{if .Revision.ServerUpdateProhibitedStatus}} True {{else}} False {{end}}<div class="note">Not supported for COM/NET</div><br/>
+    {{end}}
+  {{end}}
+
+  {{template "importantfields" dict "IsEditable" .IsEditable "IsNew" .IsNew "Revision" .Revision "Parent" .ParentContact "SavedNotes" .Revision.SavedNotes}}
+
+  {{template "approversetview" .}}
+
+  {{template "importantdates" .}}
+
+  {{if .IsEditable}}
+    <br/>
+    {{if .IsNew}}
+      <input type='submit' value='Submit Revision'>
+    {{else}}
+      <input type='submit' value='Submit Updated Revision'>
+    {{end}}
+  </form>
+  {{end}}
+
+{{end}}

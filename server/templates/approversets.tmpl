@@ -1,0 +1,54 @@
+{{define "approversets"}}
+
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Approver Sets</h1>
+      </div>
+      <p><a href="/new/approverset">Add New Approver Set</a></p>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Title
+            </td>
+            <td>
+              Description
+            </td>
+          </thead>
+          {{range $approverset := .ApproverSets}}
+            <tr>
+              <td>
+                <a href='/view/approverset/{{$approverset.ID}}'>{{$approverset.ID}}</a>
+              </td>
+              <td>
+                {{$approverset.State}}
+              </td>
+              <td>
+                {{$approverset.GetCurrentValue "Title"}}
+              </td>
+              <td>
+                {{$approverset.GetCurrentValue "Description"}}
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+
+{{end}}

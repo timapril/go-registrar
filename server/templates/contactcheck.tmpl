@@ -1,0 +1,19 @@
+{{define "contactcheck"}}
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Contact Check Request</h1>
+      </div>
+      <div class="container">
+        {{template "contactviewshort" .Con}}
+        {{template "checkstatus" .Con}}
+        {{template "checkform" dict "Obj" .Con "CSRFToken" .GetCSRFToken}}
+    </div>
+  </body>
+</html>
+{{end}}

@@ -1,0 +1,60 @@
+{{define "approvers"}}
+
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+  <body role="document">
+
+    {{template "navbar"}}
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Approvers</h1>
+      </div>
+      <p><a href="/new/approver">Add New Approver</a></p>
+      <p>
+        <table border='1px'>
+          <thead>
+            <td>
+              Link
+            </td>
+            <td>
+              Name
+            </td>
+            <td>
+              Role
+            </td>
+            <td>
+              State
+            </td>
+            <td>
+              Email
+            </td>
+          </thead>
+          {{range $approver := .Approvers}}
+            <tr>
+              <td>
+                <a href='/view/approver/{{$approver.ID}}'>{{$approver.ID}}</a>
+              </td>
+              <td>
+                {{$approver.GetCurrentValue "Name"}}
+              </td>
+              <td>
+                {{$approver.GetCurrentValue "Role"}}
+              </td>
+              <td>
+                {{$approver.State}}
+              </td>
+              <td>
+                {{$approver.GetCurrentValue "EmailAddress"}}
+              </td>
+            </tr>
+          {{end}}
+        </table>
+      </p>
+
+    </div>
+  </body>
+</html>
+
+{{end}}

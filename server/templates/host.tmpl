@@ -1,0 +1,107 @@
+{{define "host"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Host</h1>
+      </div>
+      <div class="container">
+        <div class='edit_cell'>
+          <p>
+          {{if .Editable}}
+            {{if .IsNew}}
+              <form method='Post' action='/save/host'>
+            {{else}}
+              <form method='Post' action='/update/host'>
+                <input type=hidden name='id' id='id' value='{{.Hos.ID}}'>
+            {{end}}
+            <input type='hidden' name='csrf_token' id='csrf_token' value="{{.GetCSRFToken }}">
+          {{else}}
+            <div class='current_state'><b>Current Registry State</b></div></br>
+          {{end}}
+            <div class='form_name'>Host ID:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.ID}}{{end}}<br/>
+            <div class='form_name'>Host State:</div>{{if .IsNew}}new (Not Created){{else}}{{.Hos.State}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Host Name:</div>{{if .Editable}}<input type='text' name='host_name' id='host_name' value='{{.Hos.HostName}}'>{{else}}{{.Hos.HostName}}{{end}}<br/>
+            <div class='form_name'>Registry Host ID:</div>{{.Hos.HostROID}}<br/>
+            <div class='form_name'>Host Addresses:</div><br/>
+            {{range $id, $host := .Hos.HostAddresses}}
+            <div id="current_{{$host.FormDivName}}">
+              <div class="form_name"></div>
+              <div class="title">{{$host.DisplayName}}</div>
+            </div>
+            {{end}}
+            <br/>
+            <div class='form_name'>Current Registrar Status:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.HostStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Client Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ClientDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Delete Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ServerDeleteProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ClientTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Transfer Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ServerTransferProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Client Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ClientUpdateProhibitedStatus}}{{end}}<br/>
+            <div class='form_name'>Server Update Prohibited:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.ServerUpdateProhibitedStatus}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Creating Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.CreateClientID}}{{end}}<br/>
+            <div class='form_name'>Sponsoring Client ID:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.SponsoringClientID}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Host Create Date:</div>{{if .IsNew}}Not Created Yet{{else}}  {{.Hos.CreateDate}}{{end}}<br/>
+            <div class='form_name'>Host Update Date:</div>{{if .IsNew}}Not Updated Yet{{else}}  {{.Hos.UpdateDate}}{{end}}<br/>
+            <div class='form_name'>Host Transfer Date:</div>{{if .IsNew}}Not Transfered Yet{{else}}  {{.Hos.TransferDate}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>EPP Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.EPPStatus}} ({{.Hos.EPPLastUpdate}}){{end}}<br/>
+            <div class='form_name'>DNS Status:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.DNSStatus}} ({{.Hos.DNSLastUpdate}}){{end}}<br/>
+            <br/>
+            <div class='form_name'>Pending Check</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.CheckRequired}}{{if .Hos.CheckRequired}}{{else}}  <a href="/check/host/{{.Hos.ID}}">Toggle</a>{{end}}{{end}}<br/>
+            <div class='form_name'>Created:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.CreatedAt}} by {{.Hos.CreatedBy}}{{end}}<br/>
+            <div class='form_name'>Updated:</div>{{if .IsNew}}Not Created Yet{{else}}{{.Hos.UpdatedAt}} by {{.Hos.UpdatedBy}}{{end}}<br/>
+            <br/>
+            <div class='form_name'>Update Hold Status:</div><a href='/hold/host/{{.Hos.ID}}'>Hold Update Link</a><br/>
+            {{template "holdview" .Hos}}
+            {{if .Editable}}
+              <input type='submit' name='Submit' value='Submit'/>
+            </form>
+            {{end}}
+          </p>
+        </div>
+        <!-- <div class='edit_cell'>
+          <p>
+            <div class='current_state'><b>DNS State</b></div>
+          </p>
+        </div> -->
+      </div>
+      <hr/>
+      <div class='container'>
+        {{if .IsNew}}
+          <p>No revisions can be created until the approver has been created</p>
+        {{else}}
+        <div class='edit_cell'>
+          {{if .Hos.HasRevision}}
+            <p><b>Current Revision</b></p>
+            <p>
+              {{template "hostrevisionview" .CurrentRevisionPage}}
+            </p>
+          {{else}}
+            <p>No Revisions yet</p>
+          {{end}}
+        </div>
+        <div class='edit_cell'>
+          {{if .Hos.HasPendingRevision}}
+            <p><b>Current Pending Revision</b></p>
+            {{template "actions" dict "PendingActions" .PendingActions "CSRFToken" .GetCSRFToken}}
+            {{template "hostrevisionview" .PendingRevisionPage}}
+          {{else}}
+            <b>New Revision</b><br>
+            {{template "hostrevisionview" .PendingRevisionPage}}
+          {{end}}
+        {{end}}
+    </div>
+  </body>
+</html>
+{{end}}

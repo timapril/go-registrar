@@ -1,0 +1,29 @@
+{{define "approversetrevision"}}
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header"}}
+
+  <body role="document">
+
+    {{template "navbar"}}
+
+    <div class="container" role="main">
+
+      <div class="page-header">
+        <h1>Approver Set Revision</h1>
+      </div>
+
+      <div class="container">
+        <div class='edit_cell'>
+          <b>Revision</b><br>
+          {{template "approversetrevisionview" .}}
+        </div>
+        <div class='edit_cell'>
+          {{template "actions" dict "PendingActions" .PendingActions "CSRFToken" .GetCSRFToken}}
+        </div>
+      </div>
+      <hr/>
+    </div>
+  </body>
+</html>
+{{end}}
