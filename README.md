@@ -10,7 +10,7 @@ for all changes to a Registrar's sponsored domains.
 The original source code for this project was developed at 
 [Akamai Technologies, Inc.](https://akamai.com) and managed its domain
 name portfolio for approximately five years. After the domains were
-migrated to another registrar, Akamai allowed the project's primary
+migrated to another registrar, Akamai allowed the project's primary
 developer to release the software as open source.
 
 # Packages
@@ -20,7 +20,7 @@ below.
 
 # EPP
 
-The EPP sub package implements the data strctures used to communicate
+The EPP sub package implements the data structures used to communicate
 with an EPP endpoint as defined in RFC5730.
 
 # Lib
@@ -31,11 +31,11 @@ change requests used to operate the registrar.
 # Client
 
 The client lib is used to interact with the registrar in order to
-create, update and approve objectes within the registrar.
+create, update and approve objects within the registrar.
 
 # Approver Client
 
-In collaboration with the client package, the approve client 
+In collaboration with the client package, the approver client
 interacts with the registrar to approve object changes.
 
 # Provision
@@ -45,13 +45,13 @@ changes to the registry.
 
 # Escrow Generator
 
-The escrow generator is used to expore the current registrar
+The escrow generator is used to explore the current registrar
 database in a RAA2013 compliant way for communicating to the
-Registrar Data Provier.
+Registrar Data Provider.
 
 # Server
 
-The server package proivdes the user interface for the registrar,
+The server package provides the user interface for the registrar,
 both for the web UI an the API used to communicate with the
 various clients.
 
@@ -63,7 +63,7 @@ server package.
 # WHOIS
 
 Whois is used to operate a WHOIS server for the registrar, basing
-its infomration off the registrar database.
+its information off the registrar database.
 
 # WHOIS Generate
 
@@ -77,7 +77,7 @@ protocol.
 
 # WHOIS Parse
 
-Used to parse WHOIS query resposnses into a uniform data structure.
+Used to parse WHOIS query responses into a uniform data structure.
 
 # EPP Pass Rotate
 

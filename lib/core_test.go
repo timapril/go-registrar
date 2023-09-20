@@ -38,14 +38,14 @@ func Test_Core_GetRemoteUserEmail(t *testing.T) {
 
 	// Create empty config with only the default user domain set
 	conf := Config{}
-	conf.Server.DefaultUserDomain = "example1.com"
+	conf.Server.DefaultUserDomain = "example.com"
 
 	request, _ := http.NewRequestWithContext(context.Background(), http.MethodGet, "/", nil)
 	request.Header.Add("REMOTE_USER", TestUser1Username)
 
 	email, err := GetRemoteUserEmail(request, conf)
-	if email != fmt.Sprintf("%s%s", TestUser1Username, "@example1.com") {
-		t.Errorf("Expected email to be %s%s, got %s", TestUser1Username, "@example1.com", email)
+	if email != fmt.Sprintf("%s%s", TestUser1Username, "@example.com") {
+		t.Errorf("Expected email to be %s%s, got %s", TestUser1Username, "@example.com", email)
 	}
 
 	if err != nil {
