@@ -1,6 +1,6 @@
 module github.com/timapril/go-registrar
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230717121422-5aa5874ade95
@@ -15,7 +15,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/smartystreets/goconvey v1.8.1
-	golang.org/x/crypto v0.35.0
+	golang.org/x/crypto v0.45.0
 	gopkg.in/gcfg.v1 v1.2.3
 )
 
@@ -28,7 +28,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/term v0.37.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
